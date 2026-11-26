@@ -43,7 +43,7 @@ export const getWebApp = (): TgWebApp | undefined => window.Telegram?.WebApp
 /** True only when opened from inside Telegram (initData is non-empty there). */
 export const isInTelegram = () => Boolean(getWebApp()?.initData)
 
-const BRAND_BG = '#F7F5F0'
+const BRAND_BG = '#F1EEE9' // the base colour behind the glass (src/index.css)
 
 export function initTelegram() {
   const tg = getWebApp()

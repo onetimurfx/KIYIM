@@ -50,12 +50,12 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               exit={{ opacity: 0, y: -8 }}
               className="glass-nav pointer-events-auto flex max-w-[420px] items-center gap-2.5 rounded-full py-2 pl-3 pr-3.5 text-[13px] font-semibold text-navy"
             >
-              <span className={`grid size-6 shrink-0 place-items-center rounded-full text-white ${toast.tone === 'ok' ? 'bg-[#4f6a3c]' : 'bg-coral'}`}>
+              <span className={`grid size-6 shrink-0 place-items-center rounded-full text-white ${toast.tone === 'ok' ? 'bg-[#4f6a3c]' : 'bg-danger'}`}>
                 {toast.tone === 'ok' ? <Check className="size-3.5" strokeWidth={3} /> : <CircleAlert className="size-3.5" strokeWidth={2.6} />}
               </span>
               <span>{toast.message}</span>
               {toast.action && (
-                <Link to={toast.action.to} onClick={() => setToast(null)} className="ml-1 whitespace-nowrap font-bold text-coral">
+                <Link to={toast.action.to} onClick={() => setToast(null)} className="ml-1 whitespace-nowrap font-bold text-primary-ink">
                   {toast.action.label}
                 </Link>
               )}

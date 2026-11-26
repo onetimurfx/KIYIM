@@ -24,7 +24,7 @@ export function CartLink() {
     <Link to="/savatcha" aria-label={t('nav.cart')} data-testid="header-cart" className="glass relative grid size-10 place-items-center rounded-full">
       <ShoppingBag className="size-[19px]" />
       {count > 0 && (
-        <span data-testid="header-cart-badge" className="absolute -right-1 -top-1 grid min-w-[18px] place-items-center rounded-full bg-coral px-1 text-[10px] font-extrabold leading-[18px] text-white">
+        <span data-testid="header-cart-badge" className="absolute -right-1 -top-1 grid min-w-[18px] place-items-center rounded-full bg-primary px-1 text-[10px] font-extrabold leading-[18px] text-on-primary">
           {count}
         </span>
       )}
@@ -141,24 +141,25 @@ export function Product() {
     <div className="pb-56">
       <PageHeader title={brand?.name ?? ''} right={<CartLink />} />
       <div className="px-4">
-        <Gallery categoryId={product.categoryId} color={color.hex} name={product.name} images={product.images} sample={product.sample} />
+        <Gallery key={product.id} productId={product.id} name={product.name} images={product.images} sample={product.sample} />
+        {colorIdx > 0 && <p data-testid="photo-color-note" className="mt-2 text-[12px] text-navy-soft">{t('gallery.colorNote', { color: product.colors[0].name })}</p>}
 
         <div className="mt-6 flex items-start justify-between gap-3">
           <div className="min-w-0">
             <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-stone">{kindLabel}</p>
             <h1 className="mt-1 text-[27px]">{product.name}</h1>
           </div>
-          {product.isNew && <span className="mt-1 shrink-0 rounded-full bg-navy px-2.5 py-1 text-[10px] font-extrabold tracking-wider text-white">{t('common.new')}</span>}
+          {product.isNew && <span className="mt-1 shrink-0 rounded-full bg-secondary px-2.5 py-1 text-[10px] font-extrabold tracking-wider text-on-secondary">{t('common.new')}</span>}
         </div>
 
         <p className="mt-3 flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
           <span className="text-[26px] font-extrabold tabular-nums">{formatUZS(product.price)}</span>
           {product.oldPrice && <span className="text-[15px] text-stone line-through">{formatUZS(product.oldPrice)}</span>}
-          {off > 0 && <span className="rounded-full bg-coral px-2.5 py-0.5 text-[12px] font-extrabold text-white">-{off}%</span>}
+          {off > 0 && <span className="rounded-full bg-primary px-2.5 py-0.5 text-[12px] font-extrabold text-on-primary">-{off}%</span>}
         </p>
 
-        <p data-testid="stock-status" className={`mt-2 flex items-center gap-2 text-[13px] font-bold ${out ? 'text-coral' : low ? 'text-[#b5651d]' : 'text-[#4f6a3c]'}`}>
-          <span className={`size-2 rounded-full ${out ? 'bg-coral' : low ? 'bg-[#e0922f]' : 'bg-[#6f9a52]'}`} />
+        <p data-testid="stock-status" className={`mt-2 flex items-center gap-2 text-[13px] font-bold ${out ? 'text-danger-deep' : low ? 'text-[#b5651d]' : 'text-[#4f6a3c]'}`}>
+          <span className={`size-2 rounded-full ${out ? 'bg-danger' : low ? 'bg-[#e0922f]' : 'bg-[#6f9a52]'}`} />
           {out ? t('common.outOfStock') : low ? t('product.lowStock', { n: avail }) : `${t('common.inStock')}: ${avail} ${t('common.pcs')}`}
         </p>
 
@@ -178,7 +179,7 @@ export function Product() {
                   // the chosen size may not exist in the new colour
                   if (size && variantQty(product, size, c.name) <= 0) setSize(null)
                 }}
-                className={`size-10 rounded-full border border-navy/15 transition active:scale-90 ${colorIdx === i ? 'ring-2 ring-coral ring-offset-2 ring-offset-white' : ''}`}
+                className={`size-10 rounded-full border border-navy/15 transition active:scale-90 ${colorIdx === i ? 'ring-2 ring-primary ring-offset-2 ring-offset-white' : ''}`}
                 style={{ background: c.hex }}
               />
             ))}
@@ -211,7 +212,7 @@ export function Product() {
                     setSize(s)
                     setSizeError(false)
                   }}
-                  className={`min-w-12 rounded-2xl px-4 py-2.5 text-sm font-bold transition active:scale-95 ${none ? 'opacity-35 line-through' : ''} ${size === s ? 'bg-navy text-white' : 'bg-white shadow-[0_4px_14px_-10px_rgba(23,43,58,0.6)]'} ${sizeError ? 'ring-1 ring-coral' : ''}`}
+                  className={`min-w-12 rounded-2xl px-4 py-2.5 text-sm font-bold transition active:scale-95 ${none ? 'opacity-35 line-through' : ''} ${size === s ? 'bg-secondary text-on-secondary' : 'glass-card'} ${sizeError ? 'ring-1 ring-danger' : ''}`}
                 >
                   {s}
                 </button>
@@ -219,7 +220,7 @@ export function Product() {
               })}
             </motion.div>
             {sizeError && (
-              <p role="alert" className="mt-2 text-[13px] font-semibold text-coral">
+              <p role="alert" className="mt-2 text-[13px] font-semibold text-danger-deep">
                 {t('product.chooseSize')}
               </p>
             )}
@@ -244,7 +245,7 @@ export function Product() {
         <p className="mt-2 text-[14.5px] leading-relaxed text-navy-soft">{product.description}</p>
 
         <h2 className="mt-7 text-[19px]">{t('product.details')}</h2>
-        <dl className="mt-2 divide-y divide-navy/[0.07] rounded-[22px] bg-white px-4 text-[14px] shadow-[0_8px_26px_-18px_rgba(23,43,58,0.5)]">
+        <dl className="mt-2 divide-y divide-navy/[0.07] rounded-[22px] glass-card px-4 text-[14px]">
           {rows.map(([k, v]) => (
             <div key={k} className="flex justify-between gap-4 py-3">
               <dt className="text-stone">{k}</dt>
@@ -277,7 +278,7 @@ export function Product() {
             data-testid="add-to-cart"
             onClick={addToCart}
             disabled={out}
-            className="flex items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-navy px-2 py-3.5 text-[12.5px] font-bold text-white transition active:scale-[0.97] disabled:opacity-40"
+            className="flex items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-secondary px-2 py-3.5 text-[12.5px] font-bold text-on-secondary transition active:scale-[0.97] disabled:opacity-40"
           >
             <ShoppingBag className="size-4 max-[339px]:hidden" />
             {t('product.addToCart')}
@@ -287,7 +288,7 @@ export function Product() {
             data-testid="quick-order"
             onClick={quickOrder}
             disabled={out}
-            className="flex items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-coral px-2 py-3.5 text-[12.5px] font-bold text-white shadow-[0_10px_22px_-8px_rgba(217,75,89,0.7)] transition active:scale-[0.97] disabled:opacity-40 disabled:shadow-none"
+            className="flex items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-primary px-2 py-3.5 text-[12.5px] font-bold text-on-primary transition active:scale-[0.97] disabled:opacity-40"
           >
             <Zap className="size-4 max-[339px]:hidden" fill="currentColor" />
             {t('nav.quick')}

@@ -13,7 +13,7 @@ interface Props {
   hideAddress?: boolean
 }
 
-const base = 'w-full rounded-2xl bg-white px-4 py-3.5 text-[16px] outline-none shadow-[0_4px_14px_-10px_rgba(23,43,58,0.6)] transition placeholder:text-stone/80 focus:ring-2'
+const base = 'w-full rounded-2xl glass-field px-4 py-3.5 text-[16px] outline-none transition placeholder:text-stone/80 focus:ring-2'
 
 function Field({ id, label, optional, error, hint, children }: { id: string; label: string; optional?: boolean; error?: string; hint?: ReactNode; children: ReactNode }) {
   return (
@@ -22,7 +22,7 @@ function Field({ id, label, optional, error, hint, children }: { id: string; lab
         <span>
           {label}
           {!optional && (
-            <span className="ml-1 text-coral" aria-hidden>
+            <span className="ml-1 text-primary-ink" aria-hidden>
               *
             </span>
           )}
@@ -31,7 +31,7 @@ function Field({ id, label, optional, error, hint, children }: { id: string; lab
       </label>
       {children}
       {error ? (
-        <p id={`${id}-err`} role="alert" data-testid={`${id}-error`} className="mt-1.5 text-[13px] font-semibold text-coral">
+        <p id={`${id}-err`} role="alert" data-testid={`${id}-error`} className="mt-1.5 text-[13px] font-semibold text-danger-deep">
           {error}
         </p>
       ) : (
@@ -44,7 +44,7 @@ function Field({ id, label, optional, error, hint, children }: { id: string; lab
 export function ContactFields({ value, errors, onChange, onBlurField, nameFromTelegram, hideAddress }: Props) {
   const uid = useId().replace(/:/g, '')
   const id = (f: ContactField) => `${uid}-${f}`
-  const cls = (f: ContactField) => `${base} ${errors[f] ? 'ring-2 ring-coral focus:ring-coral' : 'focus:ring-coral/60'}`
+  const cls = (f: ContactField) => `${base} ${errors[f] ? 'ring-2 ring-danger focus:ring-danger' : 'focus:ring-primary/60'}`
   const err = (f: ContactField) => (errors[f] ? t(errors[f] as Parameters<typeof t>[0]) : undefined)
   const aria = (f: ContactField) => ({ 'aria-invalid': errors[f] ? true : undefined, 'aria-describedby': errors[f] ? `${id(f)}-err` : undefined }) as const
 

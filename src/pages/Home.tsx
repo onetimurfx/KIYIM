@@ -1,9 +1,10 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Bell, Search } from 'lucide-react'
 import { Logo } from '../components/Logo'
 import { BannerCarousel } from '../components/BannerCarousel'
 import { ProductCard, ProductRail } from '../components/ProductCard'
+import { CategoryRail } from '../components/CategoryRail'
 import { OutfitCard } from '../components/OutfitCard'
 import { NotificationsSheet } from '../components/NotificationsSheet'
 import { Section } from '../components/ui'
@@ -31,11 +32,11 @@ export function Home() {
   return (
     <div className="pb-36">
       <header
-        className="sticky top-0 z-30 flex items-center justify-between bg-ivory/85 px-4 pb-2 backdrop-blur-xl"
+        className="glass-bar sticky top-0 z-30 mb-3 flex items-center justify-between gap-3 px-4 pb-2"
         style={{ paddingTop: 'calc(var(--safe-top) + 10px)' }}
       >
         <Logo className="h-10" />
-        <div className="flex gap-2">
+        <div className="flex shrink-0 gap-2">
           <button type="button" aria-label={t('home.search')} onClick={() => navigate('/katalog?focus=1')} className="glass grid size-10 place-items-center rounded-full">
             <Search className="size-[19px]" />
           </button>
@@ -45,18 +46,12 @@ export function Home() {
         </div>
       </header>
 
-      {all.some((p) => p.sample) && <p data-testid="sample-note" className="mx-4 mb-4 mt-1 rounded-2xl bg-beige-soft px-3.5 py-2 text-[12px] font-medium text-navy-soft">{t('home.demo')}</p>}
+      {all.some((p) => p.sample) && <p data-testid="sample-note" className="mx-4 mb-4 mt-1 rounded-2xl glass-tint px-3.5 py-2 text-[12px] font-medium text-navy-soft">{t('home.demo')}</p>}
 
       {banners.length > 0 && <BannerCarousel />}
-      {all.length === 0 && <p data-testid="catalog-empty" className="mx-4 mt-6 rounded-2xl bg-white px-4 py-6 text-center text-[14px] text-navy-soft">{t('catalog.notReady')}</p>}
+      {all.length === 0 && <p data-testid="catalog-empty" className="mx-4 mt-6 rounded-2xl glass-card px-4 py-6 text-center text-[14px] text-navy-soft">{t('catalog.notReady')}</p>}
 
-      <div className="no-scrollbar mt-6 flex gap-2 overflow-x-auto px-4" aria-label={t('home.categories')}>
-        {categories.map((c) => (
-          <Link key={c.id} to={c.id === 'all' ? '/katalog' : `/katalog?cat=${c.id}`} className="glass shrink-0 rounded-full px-4 py-2 text-[13px] font-semibold">
-            {c.name}
-          </Link>
-        ))}
-      </div>
+      <CategoryRail categories={categories} products={all} />
 
       {newest.length > 0 && (
       <Section title={t('home.newCollection')} to="/katalog?f=new">

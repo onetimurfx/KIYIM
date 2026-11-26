@@ -9,6 +9,7 @@ import { NEXT_STATUS, ORDER_STATUSES, type OrderDetail, type OrderRow, type Orde
 import { Badge, Btn, Chips, Empty, ErrorBox, Field, Input, Loading, Notice, Pager, Row, Textarea } from '../ui'
 import { adminError } from '../text'
 import { PageTitle } from './common'
+import { brandText } from '../../brand/instance'
 
 interface ListAnswer { orders: OrderRow[]; total: number; counts: Record<string, number> }
 const PAGE = 30
@@ -63,7 +64,7 @@ export function Orders() {
         {!error && !loading && rows.length === 0 && <Empty />}
         {rows.map((o) => (
           <button key={o.id} type="button" data-testid="order-row" data-status={o.status} onClick={() => setSp((p) => { const n = new URLSearchParams(p); n.set('open', o.id); return n }, { replace: true })}
-            className="glass flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left active:scale-[0.99]">
+            className="glass-card flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left active:scale-[0.99]">
             <div className="min-w-0 flex-1">
               <p className="truncate text-[14px] font-bold">{o.orderNumber}</p>
               <p className="truncate text-[13px] text-navy-soft">{o.contactName} · {o.itemCount} dona</p>
@@ -72,7 +73,7 @@ export function Orders() {
             <div className="flex shrink-0 flex-col items-end gap-1">
               <Badge tone={o.status}>{A.status[o.status]}</Badge>
               <span className="text-[13px] font-bold">{uzs(o.total)}</span>
-              {o.deliveryPending && <span className="text-[11px] font-semibold text-coral">yetkazish narxi?</span>}
+              {o.deliveryPending && <span className="text-[11px] font-semibold text-primary-ink">yetkazish narxi?</span>}
             </div>
           </button>
         ))}
@@ -124,31 +125,31 @@ function OrderSheet({ id, onClose, onChanged }: { id: string | null; onClose: ()
           <div className="flex items-center justify-between"><Badge tone={o.status}>{A.status[o.status]}</Badge><span className="text-[12px] text-stone">{when(o.createdAt)}</span></div>
           {act.error && <Notice>{act.error}</Notice>}
 
-          <section className="rounded-2xl bg-white p-3.5">
+          <section className="rounded-2xl glass-card p-3.5">
             <Row k="Ism">{o.contact.name}</Row>
-            <Row k="Telefon"><a href={`tel:${o.contact.phone}`} className="inline-flex items-center gap-1 text-coral"><Phone className="size-3.5" />{phoneFmt(o.contact.phone)}</a></Row>
+            <Row k="Telefon"><a href={`tel:${o.contact.phone}`} className="inline-flex items-center gap-1 text-primary-ink"><Phone className="size-3.5" />{phoneFmt(o.contact.phone)}</a></Row>
             <Row k="Manzil">{o.contact.address}</Row>
             {o.contact.comment && <Row k="Izoh">{o.contact.comment}</Row>}
             <Row k="Telegram">{d.customer.username ? `@${d.customer.username}` : d.customer.name}</Row>
           </section>
 
-          <section className="rounded-2xl bg-white p-3.5">
+          <section className="rounded-2xl glass-card p-3.5">
             {o.items.map((i, n) => (
               <div key={n} className="flex items-center gap-3 py-1.5 text-[14px]">
                 <span className="size-3.5 shrink-0 rounded-full ring-1 ring-navy/15" style={{ background: i.colorHex }} />
-                <span className="min-w-0 flex-1"><span className="font-semibold">{i.name}</span><span className="block text-[12px] text-stone">{i.brand} · {i.color}, {i.size}</span></span>
+                <span className="min-w-0 flex-1"><span className="font-semibold">{i.name}</span><span className="block text-[12px] text-stone">{brandText(i.brand)} · {i.color}, {i.size}</span></span>
                 <span className="shrink-0 text-right text-[13px]">{i.qty} × {uzs(i.unitPrice)}</span>
               </div>
             ))}
             <div className="mt-2 border-t border-navy/10 pt-2">
               <Row k="Mahsulotlar">{uzs(o.subtotal)}</Row>
-              <Row k="Yetkazish">{o.deliveryPending ? <span className="text-coral">belgilanmagan</span> : uzs(o.deliveryFee)}</Row>
+              <Row k="Yetkazish">{o.deliveryPending ? <span className="text-primary-ink">belgilanmagan</span> : uzs(o.deliveryFee)}</Row>
               <Row k="Jami"><span className="text-[16px]" data-testid="order-total">{uzs(o.total)}</span></Row>
             </div>
           </section>
 
           {canFee && (
-            <section className="rounded-2xl bg-white p-3.5">
+            <section className="rounded-2xl glass-card p-3.5">
               <Field label="Yetkazish narxi (so'm)" hint={o.deliveryPending ? "Mijoz narx belgilanmaguncha jami summani ko'rmaydi." : undefined}>
                 <div className="flex gap-2">
                   <Input inputMode="numeric" value={fee} onChange={(e) => setFee(e.target.value.replace(/\D/g, ''))} data-testid="fee-input" />
@@ -159,7 +160,7 @@ function OrderSheet({ id, onClose, onChanged }: { id: string | null; onClose: ()
           )}
 
           {asking && (
-            <section className="space-y-2 rounded-2xl bg-coral-soft p-3.5">
+            <section className="space-y-2 rounded-2xl bg-primary-soft p-3.5">
               <Field label="Bekor qilish sababi (mijozga ko'rsatiladi)">
                 <Textarea value={reason} onChange={(e) => setReason(e.target.value)} maxLength={300} data-testid="cancel-reason" />
               </Field>

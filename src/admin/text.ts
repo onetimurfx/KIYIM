@@ -5,7 +5,7 @@ import type { OrderStatus, PickupStatus } from './types'
 export const A = {
   title: 'Admin panel',
   back: "Do'konga qaytish",
-  nav: { dashboard: 'Dashboard', orders: 'Buyurtmalar', pickup: 'Pickup', products: 'Mahsulotlar', categories: 'Kategoriyalar', inventory: 'Ombor', customers: 'Mijozlar', settings: 'Sozlamalar' },
+  nav: { dashboard: 'Dashboard', orders: 'Buyurtmalar', pickup: 'Pickup', products: 'Mahsulotlar', categories: 'Kategoriyalar', inventory: 'Ombor', customers: 'Mijozlar', brand: 'Brend', settings: 'Sozlamalar' },
   loading: 'Yuklanmoqda…',
   retry: 'Qayta urinish',
   save: 'Saqlash',

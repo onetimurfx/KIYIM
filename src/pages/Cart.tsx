@@ -62,13 +62,12 @@ export function Cart() {
           const p = getProduct(l.productId)
           if (!p) return null
           const key = lineKey(l)
-          const hex = p.colors.find((c) => c.name === l.color)?.hex ?? p.colors[0].hex
           const max = Math.max(1, Math.min(variantQty(p, l.size, l.color), p.stock - qtyOf(p.id, key)))
           const canChange = p.sizes.length > 1 || p.colors.length > 1
           return (
-            <li key={key} data-testid="cart-line" className="flex gap-3 rounded-[26px] bg-white p-3 shadow-[0_12px_28px_-18px_rgba(23,43,58,0.55)]">
+            <li key={key} data-testid="cart-line" className="flex gap-3 rounded-[26px] glass-card p-3">
               <Link to={`/mahsulot/${p.id}`} className="size-[88px] shrink-0 self-start overflow-hidden rounded-[18px]">
-                <ProductImage categoryId={p.categoryId} color={hex} className="size-full" />
+                <ProductImage productId={p.id} images={p.images} width={88} height={88} className="size-full" />
               </Link>
               <div className="flex min-w-0 flex-1 flex-col">
                 <div className="flex items-start justify-between gap-2">
@@ -105,7 +104,7 @@ export function Cart() {
       <div className="mx-4 mt-5">
         <Totals subtotal={subtotal} count={count} />
       </div>
-      <Link to="/katalog" className="mx-4 mt-4 inline-block text-[14px] font-bold text-coral">
+      <Link to="/katalog" className="mx-4 mt-4 inline-block text-[14px] font-bold text-primary-ink">
         {t('cart.toCatalog')}
       </Link>
 
@@ -121,7 +120,7 @@ export function Cart() {
             type="button"
             data-testid="checkout"
             onClick={() => navigate('/savatcha/buyurtma')}
-            className="shrink-0 whitespace-nowrap rounded-full bg-coral px-5 py-3.5 text-[13.5px] font-bold text-white shadow-[0_10px_22px_-8px_rgba(217,75,89,0.7)] transition active:scale-[0.97]"
+            className="shrink-0 whitespace-nowrap rounded-full bg-primary px-5 py-3.5 text-[13.5px] font-bold text-on-primary transition active:scale-[0.97]"
           >
             {t('cart.checkout')}
           </button>
@@ -140,7 +139,7 @@ export function Cart() {
               if (editKey) changeVariant(editKey, size, color)
               setEditKey(null)
             }}
-            className="w-full rounded-full bg-coral py-3.5 text-[15px] font-bold text-white"
+            className="w-full rounded-full bg-primary py-3.5 text-[15px] font-bold text-on-primary"
           >
             {t('cart.apply')}
           </button>
@@ -160,7 +159,7 @@ export function Cart() {
                   aria-label={c.name}
                   aria-pressed={color === c.name}
                   onClick={() => setColor(c.name)}
-                  className={`size-10 rounded-full border border-navy/15 ${color === c.name ? 'ring-2 ring-coral ring-offset-2 ring-offset-white' : ''}`}
+                  className={`size-10 rounded-full border border-navy/15 ${color === c.name ? 'ring-2 ring-primary ring-offset-2 ring-offset-white' : ''}`}
                   style={{ background: c.hex }}
                 />
               ))}
@@ -177,7 +176,7 @@ export function Cart() {
                   aria-checked={size === s}
                   disabled={Boolean(editLine) && variantQty(editProduct, s, color) < (editLine?.qty ?? 1) && !(s === editLine?.size && color === editLine?.color)}
                   onClick={() => setSize(s)}
-                  className={`min-w-12 rounded-2xl px-4 py-2.5 text-sm font-bold disabled:line-through disabled:opacity-35 ${size === s ? 'bg-navy text-white' : 'bg-white shadow-[0_4px_14px_-10px_rgba(23,43,58,0.6)]'}`}
+                  className={`min-w-12 rounded-2xl px-4 py-2.5 text-sm font-bold disabled:line-through disabled:opacity-35 ${size === s ? 'bg-secondary text-on-secondary' : 'glass-card'}`}
                 >
                   {s}
                 </button>

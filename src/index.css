@@ -3,36 +3,67 @@
 @import "@fontsource-variable/fraunces";
 
 @theme {
-  --color-coral: #d94b59;
-  --color-coral-deep: #bf3a48;
-  --color-coral-soft: #fbe3e5;
-  --color-ivory: #f7f5f0;
-  --color-navy: #172b3a;
+  --color-ivory: #f4f2ee;
+  --color-navy: #172b3a; /* ink: body text */
   --color-navy-soft: #3b4f5e;
   --color-beige: #d9bfa3;
   --color-beige-soft: #efe4d6;
   --color-mist: #e6e3dc;
-  --color-stone: #8a8f94;
+  --color-stone: #5f6a73; /* darker than before: muted text now sits on translucent surfaces */
+  /* errors and destructive actions keep their own red, whatever the brand colour is */
+  --color-danger: #bf3a48;
+  --color-danger-deep: #9b2c38;
+  --color-danger-soft: #fbe3e5;
   --font-display: "Fraunces Variable", ui-serif, Georgia, serif;
   --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Brand colours: set at runtime by src/brand/theme.ts, the :root values below are the defaults. */
+@theme inline {
+  --color-primary: var(--brand-primary);
+  --color-primary-ink: var(--brand-primary-ink);
+  --color-primary-deep: var(--brand-primary-deep);
+  --color-primary-soft: var(--brand-primary-soft);
+  --color-on-primary: var(--brand-on-primary);
+  --color-secondary: var(--brand-secondary);
+  --color-on-secondary: var(--brand-on-secondary);
 }
 
 :root {
   --safe-top: calc(env(safe-area-inset-top, 0px) + var(--tg-content-safe-area-inset-top, 0px));
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --app-height: var(--tg-viewport-stable-height, 100dvh);
+
+  --brand-primary: #d94b59;
+  --brand-primary-ink: #c34350;
+  --brand-primary-deep: #a83a45;
+  --brand-primary-soft: #f9e2e4;
+  --brand-on-primary: #ffffff;
+  --brand-secondary: #172b3a;
+  --brand-on-secondary: #ffffff;
+  --brand-name: #f9b928;
+
+  /* Liquid Glass tokens ("balanced"). Every surface in the app is built from these. */
+  --glass-fill: 0.46;
+  --glass-fill-strong: 0.64;
+  --glass-blur: 18px;
+  --glass-edge: rgb(255 255 255 / 0.72);
+  --glass-shadow: 0 14px 34px -20px rgb(23 43 58 / 0.42);
+  --glass-light: inset 0 1px 0 rgb(255 255 255 / 0.85), inset 0 -1px 0 rgb(255 255 255 / 0.28);
 }
+:root[data-glass="clear"] { --glass-fill: 0.3; --glass-fill-strong: 0.5; --glass-blur: 14px; }
+:root[data-glass="solid"] { --glass-fill: 0.76; --glass-fill-strong: 0.88; --glass-blur: 20px; }
 
 /* Element defaults live in @layer base so Tailwind utilities (text-white, font-extrabold, leading-*) can override them. */
 @layer base {
   html {
     -webkit-tap-highlight-color: transparent;
     overscroll-behavior-y: none;
+    background: #f1eee9;
   }
 
   body {
     margin: 0;
-    background: var(--color-ivory);
     color: var(--color-navy);
     font-family: var(--font-sans);
     font-size: 15px;
@@ -40,6 +71,23 @@
     -webkit-font-smoothing: antialiased;
     min-height: var(--app-height);
   }
+
+  /* The colour field behind the glass: one fixed layer of soft gradients (no filter, so it costs next to nothing). */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(75% 42% at 4% 4%, color-mix(in srgb, var(--brand-primary) 34%, transparent), transparent 72%),
+      radial-gradient(70% 40% at 100% 24%, color-mix(in srgb, var(--brand-secondary) 24%, transparent), transparent 72%),
+      radial-gradient(80% 36% at 0% 58%, rgb(217 191 163 / 0.55), transparent 72%),
+      radial-gradient(75% 42% at 96% 82%, color-mix(in srgb, var(--brand-primary) 24%, transparent), transparent 72%),
+      radial-gradient(70% 34% at 18% 100%, color-mix(in srgb, var(--brand-secondary) 18%, transparent), transparent 72%),
+      #f1eee9;
+  }
+  :root[data-backdrop="plain"] body::before { background: #f1eee9; }
 
   h1, h2, h3 {
     font-family: var(--font-display);
@@ -49,42 +97,109 @@
   }
 
   :focus-visible {
-    outline: 2.5px solid var(--color-coral);
+    outline: 2.5px solid var(--brand-primary-ink);
     outline-offset: 2px;
     border-radius: 10px;
   }
 }
 
-/* ---- Liquid-glass surfaces: frosted, but opaque enough to keep text readable ---- */
+/*
+ * ---- Liquid Glass system ----
+ * Performance rule: real background blur (backdrop-filter) only on the few surfaces that float over moving content
+ * (header, tab bar, sheets, popups, small chips). Repeated list items are translucent WITHOUT blur: behind them there
+ * is only the soft gradient, so a blur would cost frames and show nothing.
+ */
 @layer components {
+  /* floating panel, blurred */
   .glass {
-    background: rgba(255, 255, 255, 0.72);
-    -webkit-backdrop-filter: blur(22px) saturate(170%);
-    backdrop-filter: blur(22px) saturate(170%);
-    border: 1px solid rgba(255, 255, 255, 0.75);
-    box-shadow:
-      0 10px 30px -12px rgba(23, 43, 58, 0.28),
-      inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    background: linear-gradient(155deg, rgb(255 255 255 / calc(var(--glass-fill-strong) + 0.08)), rgb(255 255 255 / var(--glass-fill)));
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+    backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+    border: 1px solid var(--glass-edge);
+    box-shadow: var(--glass-shadow), var(--glass-light);
   }
+  /* cards and list rows: translucent, not blurred */
+  .glass-card {
+    background: linear-gradient(155deg, rgb(255 255 255 / calc(var(--glass-fill) + 0.2)), rgb(255 255 255 / var(--glass-fill)) 55%, rgb(255 255 255 / calc(var(--glass-fill) + 0.06)));
+    border: 1px solid var(--glass-edge);
+    box-shadow: var(--glass-shadow), var(--glass-light);
+  }
+  /* small controls: chips, secondary buttons */
+  .glass-pill {
+    background: linear-gradient(180deg, rgb(255 255 255 / calc(var(--glass-fill) + 0.24)), rgb(255 255 255 / var(--glass-fill)));
+    border: 1px solid var(--glass-edge);
+    box-shadow: 0 6px 16px -12px rgb(23 43 58 / 0.55), var(--glass-light);
+  }
+  /* inputs */
+  .glass-field {
+    background: rgb(255 255 255 / calc(var(--glass-fill) + 0.16));
+    border: 1px solid var(--glass-edge);
+    box-shadow: inset 0 1px 3px rgb(23 43 58 / 0.07), 0 6px 16px -14px rgb(23 43 58 / 0.5);
+  }
+  /* page header */
+  .glass-bar {
+    background: linear-gradient(180deg, rgb(244 242 238 / calc(var(--glass-fill-strong) + 0.12)), rgb(244 242 238 / var(--glass-fill)));
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+    backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+    border-bottom: 1px solid rgb(255 255 255 / 0.6);
+    box-shadow: 0 10px 24px -22px rgb(23 43 58 / 0.55);
+  }
+  /* tab bar, action panels, toasts: over photos, so a little denser */
   .glass-nav {
-    background: rgba(255, 255, 255, 0.86);
-    -webkit-backdrop-filter: blur(26px) saturate(190%);
-    backdrop-filter: blur(26px) saturate(190%);
-    border: 1px solid rgba(255, 255, 255, 0.8);
-    box-shadow:
-      0 18px 40px -14px rgba(23, 43, 58, 0.38),
-      0 2px 6px rgba(23, 43, 58, 0.06),
-      inset 0 1px 0 rgba(255, 255, 255, 0.95);
+    background: linear-gradient(170deg, rgb(255 255 255 / calc(var(--glass-fill-strong) + 0.16)), rgb(255 255 255 / calc(var(--glass-fill-strong) + 0.12)));
+    -webkit-backdrop-filter: blur(calc(var(--glass-blur) + 6px)) saturate(190%);
+    backdrop-filter: blur(calc(var(--glass-blur) + 6px)) saturate(190%);
+    border: 1px solid var(--glass-edge);
+    box-shadow: 0 18px 40px -16px rgb(23 43 58 / 0.45), var(--glass-light);
   }
+  /* modal sheets hold a lot of text */
+  .glass-sheet {
+    background: linear-gradient(180deg, rgb(248 246 242 / calc(var(--glass-fill-strong) + 0.2)), rgb(244 242 238 / calc(var(--glass-fill-strong) + 0.12)));
+    -webkit-backdrop-filter: blur(calc(var(--glass-blur) + 10px)) saturate(190%);
+    backdrop-filter: blur(calc(var(--glass-blur) + 10px)) saturate(190%);
+    border: 1px solid var(--glass-edge);
+    box-shadow: 0 -18px 50px -20px rgb(23 43 58 / 0.5), var(--glass-light);
+  }
+  /* labels on top of photographs */
   .glass-chip {
-    background: rgba(255, 255, 255, 0.66);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.7);
+    background: rgb(255 255 255 / var(--glass-fill-strong));
+    -webkit-backdrop-filter: blur(10px) saturate(160%);
+    backdrop-filter: blur(10px) saturate(160%);
+    border: 1px solid var(--glass-edge);
+    box-shadow: var(--glass-light);
   }
+  /* soft tinted notes */
+  .glass-tint {
+    background: color-mix(in srgb, var(--color-beige-soft) 62%, transparent);
+    border: 1px solid var(--glass-edge);
+    box-shadow: var(--glass-light);
+  }
+
+  /* filled buttons get the same light reflex as the glass */
+  :where(button, a).bg-primary,
+  :where(button, a).bg-secondary {
+    background-image: linear-gradient(180deg, rgb(255 255 255 / 0.2), rgb(255 255 255 / 0) 52%);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.35), 0 10px 22px -12px rgb(23 43 58 / 0.55);
+  }
+  :where(button, a).bg-primary { box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.35), 0 10px 22px -9px color-mix(in srgb, var(--brand-primary) 75%, transparent); }
+  :where(button, a).bg-primary:disabled, :where(button, a).bg-secondary:disabled { box-shadow: none; }
+
+  .photo-frame { background: linear-gradient(150deg, #ece7df, #dfd8ce); }
+  .photo-frame[data-loading] {
+    background: linear-gradient(100deg, #e6e1d9 30%, #f4f1ec 48%, #e6e1d9 66%);
+    background-size: 220% 100%;
+    animation: shimmer 1.3s linear infinite;
+  }
+  .checkerboard { background: repeating-conic-gradient(#cfd2d4 0% 25%, #ffffff 0% 50%) 0 0 / 18px 18px; }
 }
+@keyframes shimmer { from { background-position: 100% 0; } to { background-position: -100% 0; } }
+
+/* Readable fallback where blur is unavailable or the phone asks for less transparency. */
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .glass, .glass-nav, .glass-chip { background: rgba(255, 255, 255, 0.96); }
+  :root, :root[data-glass] { --glass-fill: 0.9; --glass-fill-strong: 0.96; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  :root, :root[data-glass] { --glass-fill: 0.92; --glass-fill-strong: 0.97; --glass-blur: 0px; }
 }
 
 .rail {

@@ -1,5 +1,5 @@
 /**
- * Starting data of the demo: 26 fictional clothing products, 5 outfits, banners, 8 fictional customers and a few
+ * Starting data of the demo: 27 fictional clothing products, 5 outfits, banners, 8 fictional customers and a few
  * orders in different states so the admin panel is alive from the first tap. Every name, phone and price is made up.
  */
 import type { DBanner, DBrand, DCategory, DCustomer, DItem, DOrder, DOutfit, DPickup, DPickupEvent, DProduct, DSettings, DStatusEvent, DVariant, DemoDb } from './db'

@@ -2,14 +2,14 @@ import type { ButtonHTMLAttributes, InputHTMLAttributes, ReactNode, SelectHTMLAt
 import { AlertTriangle, Loader2 } from 'lucide-react'
 import { A } from './text'
 
-export const card = 'glass rounded-3xl p-4'
-export const inputCls = 'w-full rounded-2xl border border-navy/10 bg-white px-3.5 py-3 text-[16px] text-navy outline-none placeholder:text-stone focus:border-coral'
+export const card = 'glass-card rounded-3xl p-4'
+export const inputCls = 'w-full rounded-2xl glass-field px-3.5 py-3 text-[16px] text-navy outline-none placeholder:text-stone focus:border-primary'
 export const btn = 'inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 py-2.5 text-[14px] font-bold transition-transform active:scale-[0.97] disabled:opacity-50 disabled:active:scale-100'
-export const btnPrimary = `${btn} bg-coral text-white shadow-[0_10px_22px_-8px_rgba(217,75,89,0.65)]`
+export const btnPrimary = `${btn} bg-primary text-on-primary`
 export const btnGhost = `${btn} bg-navy/[0.06] text-navy`
-export const btnDanger = `${btn} bg-white text-coral ring-1 ring-coral/40`
+export const btnDanger = `${btn} glass-card text-danger-deep ring-1 ring-danger/40`
 
-export const Spinner = () => <Loader2 className="size-5 animate-spin text-coral" aria-label={A.loading} />
+export const Spinner = () => <Loader2 className="size-5 animate-spin text-primary-ink" aria-label={A.loading} />
 
 export function Loading() {
   return <div className="grid place-items-center py-16" role="status"><Spinner /></div>
@@ -17,8 +17,8 @@ export function Loading() {
 
 export function ErrorBox({ message, onRetry }: { message: string; onRetry?: () => void }) {
   return (
-    <div role="alert" className="mx-auto my-6 flex max-w-sm flex-col items-center gap-3 rounded-3xl bg-white p-6 text-center">
-      <AlertTriangle className="size-7 text-coral" />
+    <div role="alert" className="mx-auto my-6 flex max-w-sm flex-col items-center gap-3 rounded-3xl glass-card p-6 text-center">
+      <AlertTriangle className="size-7 text-danger-deep" />
       <p className="text-[14px] text-navy-soft">{message}</p>
       {onRetry && <button type="button" onClick={onRetry} className={btnPrimary}>{A.retry}</button>}
     </div>
@@ -30,14 +30,14 @@ export function Empty({ text = A.empty }: { text?: string }) {
 }
 
 export function Notice({ kind = 'error', children }: { kind?: 'error' | 'ok'; children: ReactNode }) {
-  return <p role={kind === 'error' ? 'alert' : 'status'} className={`rounded-2xl px-3.5 py-2.5 text-[13px] font-medium ${kind === 'error' ? 'bg-coral-soft text-coral-deep' : 'bg-emerald-50 text-emerald-800'}`}>{children}</p>
+  return <p role={kind === 'error' ? 'alert' : 'status'} className={`rounded-2xl px-3.5 py-2.5 text-[13px] font-medium ${kind === 'error' ? 'bg-danger-soft text-danger-deep' : 'bg-emerald-50 text-emerald-800'}`}>{children}</p>
 }
 
 const TONES: Record<string, string> = {
-  new: 'bg-coral-soft text-coral-deep', confirmed: 'bg-sky-100 text-sky-800', preparing: 'bg-amber-100 text-amber-800', shipped: 'bg-indigo-100 text-indigo-800',
+  new: 'bg-primary-soft text-primary-deep', confirmed: 'bg-sky-100 text-sky-800', preparing: 'bg-amber-100 text-amber-800', shipped: 'bg-indigo-100 text-indigo-800',
   delivered: 'bg-emerald-100 text-emerald-800', cancelled: 'bg-mist text-navy-soft',
-  pending: 'bg-coral-soft text-coral-deep', ready_for_pickup: 'bg-emerald-100 text-emerald-800', completed: 'bg-emerald-100 text-emerald-800', expired: 'bg-mist text-navy-soft',
-  on: 'bg-emerald-100 text-emerald-800', off: 'bg-mist text-navy-soft', low: 'bg-amber-100 text-amber-800', out: 'bg-coral-soft text-coral-deep',
+  pending: 'bg-primary-soft text-primary-deep', ready_for_pickup: 'bg-emerald-100 text-emerald-800', completed: 'bg-emerald-100 text-emerald-800', expired: 'bg-mist text-navy-soft',
+  on: 'bg-emerald-100 text-emerald-800', off: 'bg-mist text-navy-soft', low: 'bg-amber-100 text-amber-800', out: 'bg-danger-soft text-danger-deep',
 }
 export const Badge = ({ tone, children }: { tone: string; children: ReactNode }) => (
   <span className={`inline-flex shrink-0 items-center rounded-full px-2.5 py-0.5 text-[12px] font-bold ${TONES[tone] ?? 'bg-mist text-navy-soft'}`}>{children}</span>
@@ -67,7 +67,7 @@ export function Chips<T extends string>({ value, options, onChange, label }: { v
     <div role="tablist" aria-label={label} className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 pb-1">
       {options.map((o) => (
         <button key={o.id} type="button" role="tab" aria-selected={value === o.id} onClick={() => onChange(o.id)}
-          className={`min-h-10 shrink-0 rounded-full px-4 text-[13px] font-semibold transition-colors ${value === o.id ? 'bg-navy text-white' : 'glass-chip text-navy'}`}>
+          className={`min-h-10 shrink-0 rounded-full px-4 text-[13px] font-semibold transition-colors ${value === o.id ? 'bg-secondary text-on-secondary' : 'glass-pill text-navy'}`}>
           {o.label}{o.count !== undefined && <span className="ml-1.5 opacity-70">{o.count}</span>}
         </button>
       ))}

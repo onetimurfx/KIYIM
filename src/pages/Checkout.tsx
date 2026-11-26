@@ -68,15 +68,14 @@ export function Checkout() {
         <h2 className="mb-3 mt-6 text-[13px] font-extrabold uppercase tracking-wider text-stone" style={{ fontFamily: 'var(--font-sans)' }}>
           {t('checkout.yourOrder')}
         </h2>
-        <ul className="divide-y divide-navy/[0.07] rounded-[24px] bg-white px-3 shadow-[0_12px_28px_-18px_rgba(23,43,58,0.55)]">
+        <ul className="divide-y divide-navy/[0.07] rounded-[24px] glass-card px-3">
           {lines.map((l) => {
             const p = getProduct(l.productId)
             if (!p) return null
-            const hex = p.colors.find((c) => c.name === l.color)?.hex ?? p.colors[0].hex
             return (
               <li key={lineKey(l)} data-testid="checkout-line" className="flex items-center gap-3 py-3">
                 <div className="size-14 shrink-0 overflow-hidden rounded-2xl">
-                  <ProductImage categoryId={p.categoryId} color={hex} className="size-full" />
+                  <ProductImage productId={p.id} images={p.images} width={56} height={56} className="size-full" />
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="line-clamp-2 text-[14px] font-semibold leading-tight">{p.name}</p>
@@ -89,7 +88,7 @@ export function Checkout() {
             )
           })}
         </ul>
-        <Link to="/savatcha" className="mt-2 inline-block text-[13px] font-bold text-coral">
+        <Link to="/savatcha" className="mt-2 inline-block text-[13px] font-bold text-primary-ink">
           {t('checkout.backToCart')}
         </Link>
 
@@ -103,7 +102,7 @@ export function Checkout() {
         </div>
 
         {problem && (
-          <div role="alert" data-testid="submit-problem" className="mt-4 rounded-2xl bg-coral-soft px-4 py-3 text-[13.5px] font-semibold text-coral-deep">
+          <div role="alert" data-testid="submit-problem" className="mt-4 rounded-2xl bg-danger-soft px-4 py-3 text-[13.5px] font-semibold text-danger-deep">
             <p>{problem.title}</p>
             <ul className="mt-1 list-disc pl-5 font-medium">
               {problem.lines.map((x) => (
@@ -112,13 +111,13 @@ export function Checkout() {
             </ul>
           </div>
         )}
-        {Object.keys(form.errors).length > 0 && <p role="alert" className="mt-4 text-[13.5px] font-semibold text-coral">{t('form.invalid')}</p>}
+        {Object.keys(form.errors).length > 0 && <p role="alert" className="mt-4 text-[13.5px] font-semibold text-danger-deep">{t('form.invalid')}</p>}
 
         <button
           type="submit"
           data-testid="submit-order"
           disabled={form.submitting}
-          className="mt-4 w-full rounded-full bg-coral px-5 py-4 text-[15px] font-bold text-white shadow-[0_14px_28px_-10px_rgba(217,75,89,0.75)] transition active:scale-[0.98] disabled:opacity-60"
+          className="mt-4 w-full rounded-full bg-primary px-5 py-4 text-[15px] font-bold text-on-primary transition active:scale-[0.98] disabled:opacity-60"
         >
           {form.submitting ? t('submit.saving') : mode === 'server' ? t('checkout.submitServer') : t('checkout.submit')}
         </button>

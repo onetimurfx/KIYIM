@@ -37,11 +37,11 @@ export function BottomNav() {
                   <>
                     <motion.span
                       whileTap={{ scale: 0.92 }}
-                      className="-mt-7 grid size-[58px] place-items-center rounded-full bg-coral text-white shadow-[0_12px_24px_-6px_rgba(217,75,89,0.7)] ring-4 ring-ivory/90"
+                      className="-mt-7 grid size-[58px] place-items-center rounded-full bg-primary text-on-primary ring-4 ring-white/70"
                     >
                       <Zap className="size-[26px]" fill="currentColor" strokeWidth={1.5} />
                     </motion.span>
-                    <span className="text-center text-[9.5px] font-extrabold uppercase leading-[1.05] tracking-wide text-coral max-[359px]:text-[8.5px] max-[359px]:tracking-normal">
+                    <span className="text-center text-[9.5px] font-extrabold uppercase leading-[1.05] tracking-wide text-primary-ink max-[359px]:text-[8.5px] max-[359px]:tracking-normal">
                       {t(key)
                         .split(' ')
                         .map((w) => (
@@ -61,7 +61,7 @@ export function BottomNav() {
                       />
                     )}
                     <span className="relative">
-                      <Icon className={`size-[22px] ${isActive ? 'text-coral' : 'text-navy-soft'}`} strokeWidth={isActive ? 2.4 : 1.9} />
+                      <Icon className={`size-[22px] ${isActive ? 'text-primary-ink' : 'text-navy-soft'}`} strokeWidth={isActive ? 2.4 : 1.9} />
                       {to === '/savatcha' && count > 0 && (
                         <motion.span
                           key={count}
@@ -69,7 +69,7 @@ export function BottomNav() {
                           animate={{ scale: 1 }}
                           data-testid="nav-cart-badge"
                           aria-label={`${count}`}
-                          className="absolute -right-2.5 -top-2 grid min-w-[17px] place-items-center rounded-full bg-coral px-1 text-[10px] font-extrabold leading-[17px] text-white"
+                          className="absolute -right-2.5 -top-2 grid min-w-[17px] place-items-center rounded-full bg-primary px-1 text-[10px] font-extrabold leading-[17px] text-on-primary"
                         >
                           {count}
                         </motion.span>

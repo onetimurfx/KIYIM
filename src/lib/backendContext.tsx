@@ -1,6 +1,8 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { CloudOff, RefreshCw } from 'lucide-react'
 import { setCatalog } from '../data/catalog'
+import { withBrandName } from '../data/brandedCatalog'
+import { brandStore } from '../brand/instance'
 import { CatalogFormatError, mapCatalog } from '../data/serverCatalog'
 import { backend, BackendError, type ErrorKind } from './backend'
 import { t } from '../i18n'
@@ -40,7 +42,7 @@ export function errorMessage(kind: ErrorKind): string {
 async function fetchCatalog() {
   if (!backend) return
   try {
-    setCatalog(mapCatalog(await backend.catalog()), 'server')
+    setCatalog(withBrandName(mapCatalog(await backend.catalog())), 'server')
   } catch (e) {
     if (e instanceof CatalogFormatError) throw new BackendError('format', 'BAD_CATALOG')
     throw e
@@ -104,6 +106,16 @@ export function BackendProvider({ children }: { children: ReactNode }) {
     }
   }, [load])
 
+  // a renamed shop re-labels its catalog at once
+  useEffect(() => {
+    let name = brandStore.get().name
+    return brandStore.subscribe(() => {
+      if (brandStore.get().name === name) return
+      name = brandStore.get().name
+      void reload()
+    })
+  }, [reload])
+
   // fresh stock when the customer comes back to the app after a while
   useEffect(() => {
     if (!backend) return
@@ -120,7 +132,7 @@ export function BackendProvider({ children }: { children: ReactNode }) {
     return (
       <div data-testid="boot-loading" role="status" className="grid min-h-[100dvh] place-items-center px-6 text-center">
         <div>
-          <div className="mx-auto size-10 animate-spin rounded-full border-[3px] border-coral/25 border-t-coral" />
+          <div className="mx-auto size-10 animate-spin rounded-full border-[3px] border-primary/25 border-t-primary" />
           <p className="mt-4 text-[14px] font-semibold text-navy-soft">{t('boot.loading')}</p>
         </div>
       </div>
@@ -130,12 +142,12 @@ export function BackendProvider({ children }: { children: ReactNode }) {
     return (
       <div data-testid="boot-error" role="alert" className="grid min-h-[100dvh] place-items-center px-6 text-center">
         <div className="max-w-[320px]">
-          <span className="mx-auto grid size-14 place-items-center rounded-full bg-coral-soft text-coral">
+          <span className="mx-auto grid size-14 place-items-center rounded-full bg-primary-soft text-primary-ink">
             <CloudOff className="size-6" />
           </span>
           <h1 className="mt-4 text-[22px]">{t('boot.errorTitle')}</h1>
           <p className="mt-2 text-[14px] leading-snug text-navy-soft">{errorMessage(error)}</p>
-          <button type="button" data-testid="boot-retry" onClick={() => void load()} className="mt-5 inline-flex items-center gap-2 rounded-full bg-coral px-6 py-3.5 text-[14px] font-bold text-white">
+          <button type="button" data-testid="boot-retry" onClick={() => void load()} className="mt-5 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3.5 text-[14px] font-bold text-on-primary">
             <RefreshCw className="size-4" />
             {t('boot.retry')}
           </button>

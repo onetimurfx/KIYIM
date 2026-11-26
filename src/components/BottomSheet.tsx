@@ -40,7 +40,7 @@ export function BottomSheet({ open, onClose, title, children, footer, headerActi
             type="button"
             tabIndex={-1}
             aria-label={t('common.close')}
-            className="absolute inset-0 bg-navy/40"
+            className="absolute inset-0 bg-navy/25 backdrop-blur-[3px]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -52,7 +52,7 @@ export function BottomSheet({ open, onClose, title, children, footer, headerActi
             role="dialog"
             aria-modal="true"
             aria-label={title}
-            className="glass-nav absolute inset-x-0 bottom-0 mx-auto flex max-h-[88dvh] max-w-[520px] flex-col rounded-t-[32px] outline-none"
+            className="glass-sheet absolute inset-x-0 bottom-0 mx-auto flex max-h-[88dvh] max-w-[520px] flex-col rounded-t-[32px] outline-none"
             style={{ paddingBottom: 'var(--safe-bottom)' }}
             initial={{ y: '100%' }}
             animate={{ y: 0 }}

@@ -53,7 +53,7 @@ export function Pickup() {
         {!err && loading && !data && <Loading />}
         {!err && data && data.orders.length === 0 && <Empty />}
         {data?.orders.map((o) => (
-          <button key={o.id} type="button" data-testid="pickup-row" data-status={o.status} onClick={() => set('open', o.id)} className="glass flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left active:scale-[0.99]">
+          <button key={o.id} type="button" data-testid="pickup-row" data-status={o.status} onClick={() => set('open', o.id)} className="glass-card flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left active:scale-[0.99]">
             <div className="min-w-0 flex-1">
               <p className="truncate text-[14px] font-bold">{o.orderNumber}</p>
               <p className="truncate text-[13px] text-navy-soft">{o.contact.name} · {o.items.reduce((a, i) => a + i.qty, 0)} dona</p>
@@ -108,15 +108,15 @@ function PickupSheet({ id, onClose, onChanged }: { id: string | null; onClose: (
         <div className="space-y-4 pb-2" data-testid="pickup-sheet" data-status={o.status}>
           <div className="flex items-center justify-between"><Badge tone={o.status}>{A.pickupStatus[o.status]}</Badge><span className="text-[12px] text-stone">{when(o.createdAt)}</span></div>
           {act.error && <Notice>{act.error}</Notice>}
-          <section className="rounded-2xl bg-white p-3.5">
+          <section className="rounded-2xl glass-card p-3.5">
             <Row k="Ism">{o.contact.name}</Row>
-            <Row k="Telefon"><a href={`tel:${o.contact.phone}`} className="inline-flex items-center gap-1 text-coral"><Phone className="size-3.5" />{phoneFmt(o.contact.phone)}</a></Row>
+            <Row k="Telefon"><a href={`tel:${o.contact.phone}`} className="inline-flex items-center gap-1 text-primary-ink"><Phone className="size-3.5" />{phoneFmt(o.contact.phone)}</a></Row>
             {o.contact.comment && <Row k="Izoh">{o.contact.comment}</Row>}
             {o.status === 'pending' && <Row k="Qabul muddati">{when(o.pendingExpiresAt)}</Row>}
             {o.status === 'ready_for_pickup' && <Row k="Saqlanadi">{when(o.readyExpiresAt)} gacha</Row>}
             {o.closeNote && <Row k="Sabab">{o.closeNote}</Row>}
           </section>
-          <section className="rounded-2xl bg-white p-3.5">
+          <section className="rounded-2xl glass-card p-3.5">
             {o.items.map((i, n) => (
               <div key={n} className="flex items-center gap-3 py-1.5 text-[14px]">
                 <span className="size-3.5 shrink-0 rounded-full ring-1 ring-navy/15" style={{ background: i.colorHex }} />
@@ -128,17 +128,17 @@ function PickupSheet({ id, onClose, onChanged }: { id: string | null; onClose: (
           </section>
 
           {mode === 'cancel' && (
-            <section className="space-y-2 rounded-2xl bg-coral-soft p-3.5">
+            <section className="space-y-2 rounded-2xl bg-primary-soft p-3.5">
               <Field label="Bekor qilish sababi (mijozga yuboriladi)"><Textarea value={reason} onChange={(e) => setReason(e.target.value)} maxLength={300} data-testid="pk-reason" /></Field>
               <div className="flex gap-2"><Btn kind="ghost" onClick={() => setMode(null)} className="flex-1">{A.cancel}</Btn><Btn busy={act.busy} disabled={reason.trim().length < 3} onClick={() => void cancel()} className="flex-1" data-testid="pk-cancel-confirm">{A.confirm}</Btn></div>
             </section>
           )}
           {mode === 'complete' && (
-            <section className="space-y-3 rounded-2xl bg-beige-soft p-3.5">
+            <section className="space-y-3 rounded-2xl glass-tint p-3.5">
               <Field label="Mijoz ko'rsatgan pickup kodi" hint="Kod mijozning telefonida. U sizga ko'rsatilmaydi.">
                 <Input value={code} onChange={(e) => setCode(e.target.value)} maxLength={32} autoComplete="off" autoCapitalize="characters" data-testid="pk-code" />
               </Field>
-              <label className="flex items-start gap-3 text-[14px]"><input type="checkbox" checked={paid} onChange={(e) => setPaid(e.target.checked)} className="mt-0.5 size-5 accent-[#d94b59]" data-testid="pk-paid" /><span>{uzs(o.total)} to'lov qabul qilindi</span></label>
+              <label className="flex items-start gap-3 text-[14px]"><input type="checkbox" checked={paid} onChange={(e) => setPaid(e.target.checked)} className="mt-0.5 size-5 accent-primary" data-testid="pk-paid" /><span>{uzs(o.total)} to'lov qabul qilindi</span></label>
               <div className="flex gap-2"><Btn kind="ghost" onClick={() => setMode(null)} className="flex-1">{A.cancel}</Btn><Btn busy={act.busy} disabled={!paid || code.trim().length < 3} onClick={() => void complete()} className="flex-1" data-testid="pk-complete-confirm">Topshirildi</Btn></div>
             </section>
           )}

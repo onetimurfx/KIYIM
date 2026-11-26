@@ -10,7 +10,7 @@ function Stat({ to, label, value, tone, sub }: { to: string; label: string; valu
   return (
     <Link to={to} className={`${card} block active:scale-[0.99]`}>
       <p className="text-[12px] font-semibold text-navy-soft">{label}</p>
-      <p className={`mt-1 font-serif text-[28px] leading-none ${tone === 'hot' && Number(value) > 0 ? 'text-coral' : ''}`} data-testid={`stat-${label}`}>{value}</p>
+      <p className={`mt-1 font-serif text-[28px] leading-none ${tone === 'hot' && Number(value) > 0 ? 'text-primary-ink' : ''}`} data-testid={`stat-${label}`}>{value}</p>
       {sub && <p className="mt-1.5 text-[12px] text-stone">{sub}</p>}
     </Link>
   )
@@ -50,13 +50,13 @@ export function Dashboard() {
         <Stat to="/admin/products" label="Faol mahsulotlar" value={d.catalog.active} sub={`${d.catalog.inactive} ta yashirin`} />
         <Stat to="/admin/customers" label="Mijozlar" value={d.customers.total} sub={`bugun +${d.customers.newToday}`} />
       </div>
-      {d.catalog.samples > 0 && <p className="mt-3 rounded-2xl bg-beige-soft px-3.5 py-2 text-[12px] font-medium text-navy-soft">Faol namuna (sample) mahsulotlar: {d.catalog.samples}. Ular haqiqiy sotuvga chiqmasligi kerak.</p>}
+      {d.catalog.samples > 0 && <p className="mt-3 rounded-2xl glass-tint px-3.5 py-2 text-[12px] font-medium text-navy-soft">Faol namuna (sample) mahsulotlar: {d.catalog.samples}. Ular haqiqiy sotuvga chiqmasligi kerak.</p>}
 
       <h2 className="mb-2 mt-6 text-[17px]">So'nggi Savat buyurtmalari</h2>
       <div className="space-y-2">
         {d.recentOrders.length === 0 && <p className="py-6 text-center text-[14px] text-stone">{A.empty}</p>}
         {d.recentOrders.map((o) => (
-          <Link key={o.id} to={`/admin/orders?open=${o.id}`} className="glass flex items-center gap-3 rounded-2xl px-4 py-3">
+          <Link key={o.id} to={`/admin/orders?open=${o.id}`} className="glass-card flex items-center gap-3 rounded-2xl px-4 py-3">
             <div className="min-w-0 flex-1">
               <p className="truncate text-[14px] font-bold">{o.orderNumber} · {o.contactName}</p>
               <p className="text-[12px] text-stone">{when(o.createdAt)} · {uzs(o.total)}</p>

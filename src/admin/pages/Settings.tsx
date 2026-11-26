@@ -55,7 +55,7 @@ function ShopForm({ data, owner, onSaved }: { data: SettingsData; owner: boolean
       <Field label="Yetkazish narxi (so'm)" hint="Bo'sh = belgilanmagan: har bir Savat buyurtmasiga narxni siz qo'yasiz."><Input inputMode="numeric" disabled={!owner} value={fee} onChange={(e) => setFee(digits(e.target.value))} data-testid="s-fee" /></Field>
       <Field label="Shu summadan bepul yetkazish" hint="Bo'sh = bepul yetkazish yo'q."><Input inputMode="numeric" disabled={!owner} value={free} onChange={(e) => setFree(digits(e.target.value))} /></Field>
       <Field label="Aloqa (Telegram yoki telefon)"><Input disabled={!owner} value={contact} onChange={(e) => setContact(e.target.value)} maxLength={200} /></Field>
-      <label className="flex min-h-11 items-start gap-3 text-[14px]"><input type="checkbox" disabled={!owner} checked={sample} onChange={(e) => setSample(e.target.checked)} className="mt-0.5 size-5 accent-[#d94b59]" /><span>Namuna (sample) mahsulotlarni sotishga ruxsat<span className="block text-[12px] text-stone">Faqat sinov uchun. Haqiqiy sotuvda o'chiq tursin.</span></span></label>
+      <label className="flex min-h-11 items-start gap-3 text-[14px]"><input type="checkbox" disabled={!owner} checked={sample} onChange={(e) => setSample(e.target.checked)} className="mt-0.5 size-5 accent-primary" /><span>Namuna (sample) mahsulotlarni sotishga ruxsat<span className="block text-[12px] text-stone">Faqat sinov uchun. Haqiqiy sotuvda o'chiq tursin.</span></span></label>
       {owner && <>{ok && <Notice kind="ok">{A.saved}</Notice>}<Btn busy={act.busy} disabled={!valid} onClick={() => void save()} className="w-full" data-testid="s-save">{A.save}</Btn></>}
     </section>
   )
