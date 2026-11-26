@@ -2,7 +2,7 @@ import { useId, useState, type ReactNode } from 'react'
 
 /**
  * Original vector illustrations used while the catalog is sample data.
- * They are NOT photos: real product photos arrive through Supabase Storage (Phase 5).
+ * They are NOT photos: the demo admin can add real photos (kept in this browser).
  */
 const LINE = 'rgba(23,43,58,0.28)'
 

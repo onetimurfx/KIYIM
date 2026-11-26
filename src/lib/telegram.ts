@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 
-/** Minimal typing of the official Telegram.WebApp object (only what ANGAR uses). */
+/** Minimal typing of the official Telegram.WebApp object (only what the app uses). */
 interface TgButton {
   show(): void
   hide(): void

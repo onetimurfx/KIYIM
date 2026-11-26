@@ -1,5 +1,6 @@
-import { Link } from 'react-router-dom'
-import { ChevronRight, Headset, PackageOpen, ShieldCheck, UserRound } from 'lucide-react'
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { ChevronRight, Headset, PackageOpen, RotateCcw, ShieldCheck, UserRound } from 'lucide-react'
 import { PageHeader, Section } from '../components/ui'
 import { ProductRail } from '../components/ProductCard'
 import { getProduct, settings } from '../data/catalog'
@@ -12,16 +13,59 @@ import { StatusChip } from '../components/PickupStatus'
 import { formatUZS } from '../lib/format'
 import { useRecent } from '../lib/recent'
 import { t } from '../i18n'
+import { isDemoAdmin, resetDemo, setDemoAdmin } from '../demo/db'
+
+/** Demo tools: enter the demo admin panel and start over with the original demo data. */
+function DemoCard() {
+  const nav = useNavigate()
+  const [admin, setAdmin] = useState(isDemoAdmin())
+  const [confirm, setConfirm] = useState(false)
+  return (
+    <section data-testid="demo-card" className="glass mt-4 rounded-2xl px-4 py-3.5">
+      <p className="text-[11px] font-extrabold uppercase tracking-wider text-coral">Demo rejim</p>
+      <p className="mt-1 text-[12.5px] leading-snug text-navy-soft">Barcha ma'lumotlar faqat shu qurilmada saqlanadi. Buyurtmalar, ombor va admin o'zgarishlari bir-biriga bog'liq ishlaydi.</p>
+      <button
+        type="button"
+        data-testid="admin-link"
+        onClick={() => {
+          setDemoAdmin(true)
+          setAdmin(true)
+          nav('/admin')
+        }}
+        className="mt-3 flex w-full items-center gap-3 rounded-2xl bg-white px-3 py-3 text-left active:scale-[0.99]"
+      >
+        <span className="grid size-10 place-items-center rounded-full bg-coral-soft text-coral"><ShieldCheck className="size-5" /></span>
+        <span className="min-w-0 flex-1 text-[14px] font-bold">Demo admin panelga kirish</span>
+        <ChevronRight className="size-4 text-stone" />
+      </button>
+      {admin && (
+        <button type="button" data-testid="admin-off" onClick={() => { setDemoAdmin(false); setAdmin(false) }} className="mt-2 w-full rounded-full px-3 py-2 text-[12.5px] font-semibold text-navy-soft">
+          Admin rejimidan chiqish
+        </button>
+      )}
+      {confirm ? (
+        <div className="mt-2 flex items-center gap-2">
+          <button type="button" data-testid="demo-reset-yes" onClick={() => { resetDemo(); window.location.reload() }} className="flex-1 rounded-full bg-coral px-3 py-2.5 text-[13px] font-bold text-white">Ha, tozalash</button>
+          <button type="button" onClick={() => setConfirm(false)} className="flex-1 rounded-full bg-white px-3 py-2.5 text-[13px] font-bold">Bekor qilish</button>
+        </div>
+      ) : (
+        <button type="button" data-testid="demo-reset" onClick={() => setConfirm(true)} className="mt-2 flex w-full items-center justify-center gap-2 rounded-full px-3 py-2 text-[12.5px] font-semibold text-navy-soft">
+          <RotateCcw className="size-3.5" /> Demoni boshidan boshlash
+        </button>
+      )}
+    </section>
+  )
+}
 
 export function Profile() {
   const user = getTelegramUser()
   useCatalogVersion()
-  const { mode, auth, isAdmin } = useBackend()
+  const { mode, auth } = useBackend()
   const { orders, status, refresh } = useOrders()
   const pickup = usePickup()
   const server = mode === 'server'
   const recent = useRecent().map(getProduct).filter((p) => p !== undefined)
-  const name = user ? [user.first_name, user.last_name].filter(Boolean).join(' ') : 'ANGAR mijozi'
+  const name = user ? [user.first_name, user.last_name].filter(Boolean).join(' ') : 'BREND mijozi'
 
   return (
     <div className="pb-36">
@@ -42,14 +86,7 @@ export function Profile() {
         </div>
         <p className="mt-2 px-1 text-[12px] text-stone">{server && auth === 'ok' ? t('profile.tgVerified') : isInTelegram() ? t('profile.tgNote') : t('profile.preview')}</p>
 
-        {/* UI hint only: the server checks admin rights on every admin call */}
-        {isAdmin && (
-          <Link to="/admin" data-testid="admin-link" className="glass mt-4 flex items-center gap-3 rounded-2xl px-4 py-3.5 active:scale-[0.99]">
-            <span className="grid size-10 place-items-center rounded-full bg-coral-soft text-coral"><ShieldCheck className="size-5" /></span>
-            <span className="min-w-0 flex-1 text-[14px] font-bold">Admin panel</span>
-            <ChevronRight className="size-4 text-stone" />
-          </Link>
-        )}
+        <DemoCard />
 
         <h2 className="mb-2 mt-7 text-xl">{t('profile.pickupTitle')}</h2>
         <section data-testid="pickup-history">

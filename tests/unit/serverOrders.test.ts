@@ -8,7 +8,7 @@ const raw = () => ({
   id: ID, orderNumber: 'AYN-261106-00001', status: 'new', source: 'quick', createdAt: '2026-11-06T10:00:00+05:00',
   contact: { name: 'Ali Valiyev', phone: '+998901234567', address: 'Toshkent, Chilonzor 9', comment: null },
   subtotal: 100000, deliveryFee: null, deliveryPending: true, total: 100000,
-  items: [{ productId: 'P1', name: 'Xudi', brand: 'Brend', categoryId: 'hoodies', size: 'M', color: 'Qora', colorHex: '#222222', qty: 1, unitPrice: 100000 }],
+  items: [{ productId: 'P1', name: 'Xudi', brand: 'BREND', categoryId: 'hoodies', size: 'M', color: 'Qora', colorHex: '#222222', qty: 1, unitPrice: 100000 }],
 })
 
 describe('server orders', () => {

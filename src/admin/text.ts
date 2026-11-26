@@ -19,9 +19,8 @@ export const A = {
   saved: 'Saqlandi',
   confirm: 'Tasdiqlash',
   gate: {
-    demo: { title: 'Server ulanmagan', hint: "Admin panel faqat server (Supabase) ulangan holatda ishlaydi. Hozir demo rejim." },
     tg: { title: 'Telegram ichida oching', hint: "Admin paneliga faqat Telegram Mini App orqali, administrator hisobingiz bilan kirish mumkin." },
-    forbidden: { title: "Ruxsat yo'q", hint: "Bu hisob administrator emas. Ruxsatni faqat loyiha egasi bazada beradi." },
+    forbidden: { title: "Ruxsat yo'q", hint: "Demo admin rejimi yoqilmagan. Profil sahifasidagi «Demo admin panelga kirish» tugmasini bosing." },
     failed: { title: 'Kirib bo‘lmadi', hint: "Serverga ulanib bo'lmadi. Internetni tekshirib, qayta urinib ko'ring." },
   },
   role: { owner: 'Egasi', manager: 'Menejer' },

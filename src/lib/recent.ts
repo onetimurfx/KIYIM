@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-const KEY = 'aynimo:recent'
+const KEY = 'kiyim:recent'
 const MAX = 12
 
 const read = (): string[] => {

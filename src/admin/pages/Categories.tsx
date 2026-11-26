@@ -39,7 +39,7 @@ export function Categories() {
         <div className="space-y-2">
           {brands.data.brands.map((b) => (
             <button key={b.id} type="button" data-testid="brand-row" onClick={() => setEdit({ kind: 'brand', item: b })} className={`${card} flex w-full items-center gap-3 !p-3.5 text-left`}>
-              <div className="min-w-0 flex-1"><p className="truncate text-[14px] font-bold">{b.name}</p><p className="text-[12px] text-stone">{b.type === 'original' ? 'Original (ANGAR)' : 'Boshqa brend'} · {b.activeProductCount}/{b.productCount} mahsulot</p></div>
+              <div className="min-w-0 flex-1"><p className="truncate text-[14px] font-bold">{b.name}</p><p className="text-[12px] text-stone">{b.type === 'original' ? 'Original (Brend)' : 'Boshqa brend'} · {b.activeProductCount}/{b.productCount} mahsulot</p></div>
               <Badge tone={b.active ? 'on' : 'off'}>{b.active ? 'Faol' : 'Yashirin'}</Badge><Pencil className="size-4 text-stone" />
             </button>
           ))}
@@ -87,7 +87,7 @@ function EditSheet({ edit, owner, onClose, onDone }: { edit: Editing; owner: boo
         {isCat ? (
           <Field label="Tartib raqami" hint="Kichigi tepada ko'rinadi"><Input inputMode="numeric" value={sort} onChange={(e) => setSort(e.target.value.replace(/\D/g, ''))} maxLength={4} /></Field>
         ) : (
-          <Field label="Turi" hint="Mahsulot turi (Original / Boshqa) brendga qarab belgilanadi"><Select value={type} onChange={(e) => setType(e.target.value as 'original' | 'other')}><option value="original">Original (ANGAR)</option><option value="other">Boshqa brend</option></Select></Field>
+          <Field label="Turi" hint="Mahsulot turi (Original / Boshqa) brendga qarab belgilanadi"><Select value={type} onChange={(e) => setType(e.target.value as 'original' | 'other')}><option value="original">Original (Brend)</option><option value="other">Boshqa brend</option></Select></Field>
         )}
         <label className="flex min-h-11 items-center gap-3 text-[14px]"><input type="checkbox" checked={active} onChange={(e) => setActive(e.target.checked)} className="size-5 accent-[#d94b59]" />Faol (do'konda ko'rinadi)</label>
         {confirmDel && <Notice>Kategoriya butunlay o'chiriladi. Faqat bo'sh kategoriyani o'chirish mumkin.</Notice>}

@@ -1,10 +1,7 @@
 /**
- * The catalog the UI reads. Two sources, never mixed:
- *   'sample' - the built-in placeholder products (data/sample.ts). Used only when no backend is configured.
- *   'server' - what Supabase returned (get_catalog). Replaces the sample data completely.
+ * The catalog the UI reads. It is empty until BackendProvider loads it from the demo backend (src/demo), which keeps it in localStorage.
  * The exports are live bindings: `setCatalog` swaps them and the app re-renders (BackendProvider bumps a version).
  */
-import * as sample from './sample'
 import type { Banner, Brand, Category, Outfit, Product, ShopSettings, VariantStock } from './types'
 
 export type CatalogSource = 'sample' | 'server'
@@ -20,12 +17,12 @@ export interface CatalogData {
 
 export const NO_SETTINGS: ShopSettings = { deliveryConfigured: false, deliveryFee: null, deliveryFreeFrom: null, supportContact: null }
 
-export let source: CatalogSource = 'sample'
-export let categories: Category[] = sample.categories
-export let brands: Brand[] = sample.brands
-export let products: Product[] = sample.products
-export let outfits: Outfit[] = sample.outfits
-export let banners: Banner[] = sample.banners
+export let source: CatalogSource = 'server'
+export let categories: Category[] = []
+export let brands: Brand[] = []
+export let products: Product[] = []
+export let outfits: Outfit[] = []
+export let banners: Banner[] = []
 export let settings: ShopSettings = NO_SETTINGS
 
 export function setCatalog(data: CatalogData, from: CatalogSource) {

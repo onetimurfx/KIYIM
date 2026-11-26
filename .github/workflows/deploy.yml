@@ -1,8 +1,6 @@
 name: Deploy Mini App preview to GitHub Pages
 
-# The front-end is static (GitHub Pages, HTTPS). The backend lives in Supabase (see docs/BACKEND_SETUP.md).
-# VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY are PUBLIC values stored as repository *Variables*.
-# If they are not set the app builds in demo mode (sample catalog, orders are NOT sent anywhere).
+# Static demo (GitHub Pages, HTTPS). No backend: all demo data lives in the visitor's localStorage.
 on:
   push:
     branches: [main]
@@ -30,8 +28,6 @@ jobs:
       - run: npm run build
         env:
           VITE_BASE: /${{ github.event.repository.name }}/
-          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

@@ -3,7 +3,7 @@ import { Link, NavLink, Navigate, Route, Routes } from 'react-router-dom'
 import { Boxes, ClipboardList, LayoutDashboard, Package, Settings, ShieldAlert, Store, Tags, Users, WifiOff, Smartphone, ArrowLeft } from 'lucide-react'
 import { Logo } from '../components/Logo'
 import { useBackend } from '../lib/backendContext'
-import { aGet, hasBackend } from './api'
+import { aGet } from './api'
 import { useRes } from './hooks'
 import { A } from './text'
 import type { Me } from './types'
@@ -102,10 +102,8 @@ function Shell({ me }: { me: Me }) {
 /** Gate: the panel renders only after the SERVER confirmed (GET me) that this Telegram account is an active administrator. */
 export default function AdminApp() {
   const { auth, signIn } = useBackend()
-  const demo = !hasBackend()
   const me = useRes(() => (auth === 'ok' ? aGet<Me>('me') : Promise.reject(new Error('wait'))), [auth])
 
-  if (demo) return <Screen icon={<WifiOff className="size-7" />} title={A.gate.demo.title} hint={A.gate.demo.hint} />
   if (auth === 'not_in_telegram') return <Screen icon={<Smartphone className="size-7" />} title={A.gate.tg.title} hint={A.gate.tg.hint} />
   if (auth === 'failed') return <Screen icon={<WifiOff className="size-7" />} title={A.gate.failed.title} hint={A.gate.failed.hint}><Btn onClick={() => void signIn()}>{A.retry}</Btn></Screen>
   if (auth !== 'ok' || me.loading) return <div className="grid min-h-[var(--app-height)] place-items-center"><Loading /></div>

@@ -4,7 +4,7 @@ import { useBackend } from './backendContext'
 import { addLine, basketCount, basketSubtotal, removeLine, sanitizeBasket, setQty as setLineQty, type AddResult, type QuickLine } from './quickBasket'
 
 /** Quick Order basket (store pickup). Own storage key, independent from the Cart. sessionStorage: it is a short-lived selection. */
-const KEY = 'aynimo:quick-basket'
+const KEY = 'kiyim:quick-basket'
 
 interface Ctx {
   lines: QuickLine[]

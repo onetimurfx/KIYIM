@@ -1,4 +1,4 @@
-/** Shapes of the admin-api answers (see docs/ADMIN_API.md). Read defensively: the server is the source of truth. */
+/** Shapes of the admin-api answers. Read defensively: the server is the source of truth. */
 export type Role = 'owner' | 'manager'
 export interface Me { telegramId: number; name: string; role: Role }
 

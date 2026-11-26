@@ -10,4 +10,4 @@ export const aPost = <T = Record<string, unknown>>(resource: string, body?: Reco
 export const pGet = <T>(params?: AdminParams) => b().adminPickupGet(params) as unknown as Promise<T>
 export const pPost = <T>(body: Record<string, unknown>) => b().adminPickupPost(body) as unknown as Promise<T>
 export const uploadPhoto = (uploadUrl: string, file: Blob) => b().adminUpload(uploadUrl, file)
-export const hasBackend = () => backend !== null
+export const hasBackend = () => true

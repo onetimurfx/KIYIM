@@ -1,8 +1,8 @@
-import type { Banner, Brand, Category, ColorOption, Outfit, Product } from './types'
+import type { Banner, Brand, Category, ColorOption, Outfit, Product } from '../../src/data/types'
 
 /**
  * TEMPORARY SAMPLE DATA. Names, prices and stock are placeholders for design review only.
- * Phase 5 replaces this file with data from Supabase.
+ * Test fixture only (the app itself uses src/demo/seed.ts).
  */
 
 export const categories: Category[] = [
@@ -21,7 +21,7 @@ export const categories: Category[] = [
 ]
 
 export const brands: Brand[] = [
-  { id: 'aynimo', name: 'ANGAR Original', type: 'original' },
+  { id: 'brend', name: 'BREND Original', type: 'original' },
   { id: 'sample-a', name: 'Namuna brend A', type: 'other' },
   { id: 'sample-b', name: 'Namuna brend B', type: 'other' },
 ]
@@ -60,7 +60,7 @@ const p = (
   description: `${name}: namunaviy tavsif. Haqiqiy mahsulot ma'lumotlari admin panel orqali kiritiladi.`,
   sizes: categoryId === 'shoes' ? SHOE : categoryId === 'bags' || categoryId === 'accessories' ? ['Yagona'] : CLOTH,
   stock: 12,
-  type: brandId === 'aynimo' ? 'original' : 'other',
+  type: brandId === 'brend' ? 'original' : 'other',
   isNew: false,
   active: true,
   popularity: 50,
@@ -70,27 +70,27 @@ const p = (
 })
 
 export const products: Product[] = [
-  p('s-sneaker-1', 'Oq krossovka', 'shoes', 'aynimo', 690000, [C.white, C.beige], { isNew: true, popularity: 95 }),
+  p('s-sneaker-1', 'Oq krossovka', 'shoes', 'brend', 690000, [C.white, C.beige], { isNew: true, popularity: 95 }),
   p('s-sneaker-2', 'Shahar krossovkasi', 'shoes', 'sample-a', 820000, [C.black, C.gray], { popularity: 80, oldPrice: 990000 }),
-  p('s-shirt-1', 'Klassik ko\'ylak', 'shirts', 'aynimo', 420000, [C.white, C.denim], { isNew: true, popularity: 70 }),
+  p('s-shirt-1', 'Klassik ko\'ylak', 'shirts', 'brend', 420000, [C.white, C.denim], { isNew: true, popularity: 70 }),
   p('s-shirt-2', 'Kundalik ko\'ylak', 'shirts', 'sample-b', 360000, [C.beige, C.olive], { popularity: 55, oldPrice: 450000 }),
-  p('s-tee-1', 'Oddiy futbolka', 'tshirts', 'aynimo', 190000, [C.coral, C.white, C.black], { isNew: true, popularity: 88 }),
+  p('s-tee-1', 'Oddiy futbolka', 'tshirts', 'brend', 190000, [C.coral, C.white, C.black], { isNew: true, popularity: 88 }),
   p('s-tee-2', 'Keng futbolka', 'tshirts', 'sample-a', 210000, [C.navy, C.gray], { popularity: 60 }),
-  p('s-pants-1', 'Klassik shim', 'trousers', 'aynimo', 480000, [C.navy, C.black], { popularity: 75 }),
+  p('s-pants-1', 'Klassik shim', 'trousers', 'brend', 480000, [C.navy, C.black], { popularity: 75 }),
   p('s-pants-2', 'Keng shim', 'trousers', 'sample-b', 520000, [C.olive, C.beige], { oldPrice: 640000, popularity: 58 }),
-  p('s-dress-1', 'Yozgi libos', 'dresses', 'aynimo', 760000, [C.coral, C.ivory], { isNew: true, popularity: 92 }),
+  p('s-dress-1', 'Yozgi libos', 'dresses', 'brend', 760000, [C.coral, C.ivory], { isNew: true, popularity: 92 }),
   p('s-dress-2', 'Kechki libos', 'dresses', 'sample-a', 1190000, [C.navy, C.black], { popularity: 66, stock: 0 }),
-  p('s-jacket-1', 'Yengil kurtka', 'jackets', 'aynimo', 890000, [C.olive, C.black], { popularity: 72 }),
+  p('s-jacket-1', 'Yengil kurtka', 'jackets', 'brend', 890000, [C.olive, C.black], { popularity: 72 }),
   p('s-jacket-2', 'Jinsi kurtka', 'jackets', 'sample-b', 740000, [C.denim], { oldPrice: 920000, popularity: 61 }),
-  p('s-hoodie-1', 'Yumshoq xudi', 'hoodies', 'aynimo', 540000, [C.gray, C.coral, C.navy], { isNew: true, popularity: 90 }),
+  p('s-hoodie-1', 'Yumshoq xudi', 'hoodies', 'brend', 540000, [C.gray, C.coral, C.navy], { isNew: true, popularity: 90 }),
   p('s-hoodie-2', 'Oversayz xudi', 'hoodies', 'sample-a', 580000, [C.black, C.beige], { popularity: 64, stock: 4 }),
   p('s-sweater-1', 'Trikotaj sviter', 'sweaters', 'sample-b', 460000, [C.ivory, C.beige], { popularity: 52, stock: 3 }),
-  p('s-sweater-2', 'Yo\'l-yo\'l sviter', 'sweaters', 'aynimo', 490000, [C.navy, C.ivory], { oldPrice: 590000, popularity: 57 }),
-  p('s-coat-1', 'Uzun palto', 'outerwear', 'aynimo', 1490000, [C.beige, C.black], { isNew: true, popularity: 78 }),
+  p('s-sweater-2', 'Yo\'l-yo\'l sviter', 'sweaters', 'brend', 490000, [C.navy, C.ivory], { oldPrice: 590000, popularity: 57 }),
+  p('s-coat-1', 'Uzun palto', 'outerwear', 'brend', 1490000, [C.beige, C.black], { isNew: true, popularity: 78 }),
   p('s-coat-2', 'Issiq paxta kurtka', 'outerwear', 'sample-a', 1290000, [C.navy, C.olive], { popularity: 59, stock: 0 }),
   p('s-acc-1', 'Quyosh ko\'zoynagi', 'accessories', 'sample-b', 240000, [C.black, C.coral], { popularity: 68 }),
-  p('s-acc-2', 'Charm kamar', 'accessories', 'aynimo', 220000, [C.black, C.beige], { popularity: 54, oldPrice: 280000 }),
-  p('s-bag-1', 'Ayollar sumkasi', 'bags', 'aynimo', 650000, [C.coral, C.beige], { isNew: true, popularity: 85 }),
+  p('s-acc-2', 'Charm kamar', 'accessories', 'brend', 220000, [C.black, C.beige], { popularity: 54, oldPrice: 280000 }),
+  p('s-bag-1', 'Ayollar sumkasi', 'bags', 'brend', 650000, [C.coral, C.beige], { isNew: true, popularity: 85 }),
   p('s-bag-2', 'Shahar sumkasi', 'bags', 'sample-a', 570000, [C.black, C.navy], { popularity: 62, stock: 2 }),
 ]
 
@@ -103,7 +103,7 @@ export const outfits: Outfit[] = [
 
 export const banners: Banner[] = [
   { id: 'b-new', title: 'Yangi kolleksiya', subtitle: "Eng so'nggi qo'shilgan modellar", to: '/katalog?f=new', tone: 'coral' },
-  { id: 'b-original', title: 'ANGAR Original', subtitle: "Faqat bizning mahsulotlar", to: '/katalog?f=original', tone: 'navy' },
+  { id: 'b-original', title: 'BREND Original', subtitle: "Faqat bizning mahsulotlar", to: '/katalog?f=original', tone: 'navy' },
   { id: 'b-sale', title: 'Chegirmadagi mahsulotlar', subtitle: 'Narxi pasaytirilgan modellar', to: '/katalog?f=discount', tone: 'beige' },
 ]
 

@@ -1,7 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import { activeProducts, getProduct, products } from '../../src/data/sample'
+import * as sampleData from '../fixtures/sample'
+import { activeProducts, getProduct, products } from '../fixtures/sample'
+import { NO_SETTINGS, setCatalog } from '../../src/data/catalog'
 import { EMPTY, applyFilters, activeGroups, facets, parseFilters, serializeFilters, type FilterState } from '../../src/lib/filters'
 
+// the app's live catalog starts empty (the demo backend fills it); these tests run against the fixture data
+setCatalog({ ...sampleData, settings: NO_SETTINGS }, 'server')
 const all = activeProducts()
 const f = (patch: Partial<FilterState>): FilterState => ({ ...EMPTY, ...patch })
 const ids = (list: { id: string }[]) => list.map((p) => p.id)
@@ -24,8 +28,8 @@ describe('applyFilters', () => {
     expect(r.every((p) => p.categoryId === 'shoes')).toBe(true)
   })
   it('filters by brand (multi)', () => {
-    const r = applyFilters(all, f({ brands: ['aynimo', 'sample-a'] }))
-    expect(r.every((p) => ['aynimo', 'sample-a'].includes(p.brandId))).toBe(true)
+    const r = applyFilters(all, f({ brands: ['brend', 'sample-a'] }))
+    expect(r.every((p) => ['brend', 'sample-a'].includes(p.brandId))).toBe(true)
     expect(r.length).toBe(all.filter((p) => p.brandId !== 'sample-b').length)
   })
   it('filters by size', () => {
@@ -59,7 +63,7 @@ describe('applyFilters', () => {
     expect(applyFilters(all, f({ tag: 'other' })).every((p) => p.type === 'other')).toBe(true)
   })
   it('combines filters with AND', () => {
-    const r = applyFilters(all, f({ cat: 'hoodies', brands: ['aynimo'], colors: ['Marjon'], avail: true }))
+    const r = applyFilters(all, f({ cat: 'hoodies', brands: ['brend'], colors: ['Marjon'], avail: true }))
     expect(ids(r)).toEqual(['s-hoodie-1'])
   })
   it('searches name and brand', () => {
@@ -95,13 +99,13 @@ describe('sorting', () => {
 
 describe('URL state', () => {
   it('round-trips', () => {
-    const s = f({ cat: 'jackets', brands: ['aynimo'], sizes: ['M', 'L'], colors: ['Qora'], min: 300000, max: 900000, avail: true, tag: 'new', sort: 'price_asc', q: 'kurtka' })
+    const s = f({ cat: 'jackets', brands: ['brend'], sizes: ['M', 'L'], colors: ['Qora'], min: 300000, max: 900000, avail: true, tag: 'new', sort: 'price_asc', q: 'kurtka' })
     expect(parseFilters(serializeFilters(s))).toEqual(s)
   })
   it('omits defaults', () => expect(serializeFilters(EMPTY).toString()).toBe(''))
   it('drops unknown / malformed values', () => {
-    const p = parseFilters(new URLSearchParams('cat=nope&brand=x,aynimo&size=ZZ,M&color=Yo&min=abc&max=-5&f=bad&sort=zzz'))
-    expect(p).toEqual(f({ brands: ['aynimo'], sizes: ['M'] }))
+    const p = parseFilters(new URLSearchParams('cat=nope&brand=x,brend&size=ZZ,M&color=Yo&min=abc&max=-5&f=bad&sort=zzz'))
+    expect(p).toEqual(f({ brands: ['brend'], sizes: ['M'] }))
   })
   it('swaps reversed price bounds and ignores bounds that equal the catalog range', () => {
     const b = facets().bounds

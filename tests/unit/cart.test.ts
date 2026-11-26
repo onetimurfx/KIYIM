@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { getProduct } from '../../src/data/sample'
+import { getProduct } from '../fixtures/sample'
 import { addLine, cartCount, cartSubtotal, lineKey, qtyOfProduct, removeLine, sanitizeCart, setLineQty, type CartLine } from '../../src/lib/cartLogic'
 
 const stockOf = (id: string) => getProduct(id)?.stock ?? 0

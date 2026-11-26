@@ -5,7 +5,7 @@ import type { ContactInput } from './validation'
 /** Unsent form text survives a refresh (sessionStorage only: it is personal data and is wiped with the tab). */
 const EMPTY: ContactInput = { name: '', phone: '', address: '', comment: '' }
 
-const key = (scope: string) => `aynimo:draft:${scope}`
+const key = (scope: string) => `kiyim:draft:${scope}`
 
 function read(scope: string): ContactInput | null {
   try {
@@ -54,7 +54,7 @@ export function useContactDraft(scope: string, prefill: Partial<ContactInput> = 
  * It is cleared only after a successful save.
  */
 export function getAttemptId(scope: string): string {
-  const k = `aynimo:attempt:${scope}`
+  const k = `kiyim:attempt:${scope}`
   try {
     const cur = window.sessionStorage.getItem(k)
     if (cur) return cur
@@ -70,7 +70,7 @@ const memoryAttempts: Record<string, string> = {}
 export function clearAttemptId(scope: string) {
   delete memoryAttempts[scope]
   try {
-    window.sessionStorage.removeItem(`aynimo:attempt:${scope}`)
+    window.sessionStorage.removeItem(`kiyim:attempt:${scope}`)
   } catch {
     /* ignore */
   }

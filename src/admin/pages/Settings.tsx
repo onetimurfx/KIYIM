@@ -26,7 +26,7 @@ export function SettingsPage() {
       {r.data.admins && (
         <section className={`${card}`}>
           <h2 className="mb-1 text-[17px]">Administratorlar</h2>
-          <p className="mb-2 text-[12px] text-stone">Faqat ko'rish. Administrator qo'shish yoki olib tashlash panel orqali mumkin emas: bu faqat Supabase bazasida loyiha egasi tomonidan qilinadi.</p>
+          <p className="mb-2 text-[12px] text-stone">Faqat ko'rish. Demo rejimda administrator ro'yxati o'zgarmaydi.</p>
           {r.data.admins.map((a) => <Row key={a.telegramId} k={`${a.name} · ${a.telegramId}`}><Badge tone={a.active ? 'on' : 'off'}>{A.role[a.role]}{a.active ? '' : ' (o‘chirilgan)'}</Badge></Row>)}
         </section>
       )}

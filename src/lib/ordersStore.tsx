@@ -5,7 +5,7 @@ import { useBackend } from './backendContext'
 import { fromServerOrder, issuesFromServer, placeOrder, sanitizeOrders, type Order, type PlaceInput, type PlaceResult } from './orders'
 import { validateContact, validateField, type ContactErrors, type ContactField } from './validation'
 
-const KEY = 'aynimo:orders'
+const KEY = 'kiyim:orders'
 
 export type PlaceOutcome = PlaceResult & {
   /** true only when the draft was written to this device's storage AND read back successfully */
@@ -40,7 +40,7 @@ function readStorage(): { orders: Order[]; ok: boolean } {
   } catch {
     // unreadable JSON still means storage works; a thrown SecurityError means it does not. Distinguish:
     try {
-      window.localStorage.getItem('aynimo:probe')
+      window.localStorage.getItem('kiyim:probe')
       return { orders: [], ok: true }
     } catch {
       return { orders: [], ok: false }

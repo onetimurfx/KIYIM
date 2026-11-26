@@ -7,7 +7,7 @@ import {
   type AddResult, type CartLine,
 } from './cartLogic'
 
-const CART_KEY = 'aynimo:cart'
+const CART_KEY = 'kiyim:cart'
 
 interface CartCtx {
   lines: CartLine[]

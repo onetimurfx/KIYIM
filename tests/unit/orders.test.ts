@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { getProduct } from '../../src/data/sample'
+import { getProduct } from '../fixtures/sample'
 import { changeVariant, lineKey, type CartLine } from '../../src/lib/cartLogic'
 import { computeTotals, readDeliveryConfig, type DeliveryConfig } from '../../src/lib/delivery'
 import { makeRef, newAttemptId, placeOrder, sanitizeOrders, type Order, type PlaceInput } from '../../src/lib/orders'

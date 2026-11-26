@@ -25,7 +25,7 @@ export function Pickup() {
 
   const load = useCallback(async () => {
     setLoading(true)
-    // monitoring: a stopped cron means expired orders are not cleaned up (see BACKEND_SETUP.md)
+    // monitoring: a stopped cron means expired orders are not cleaned up 
     pGet<{ healthy: boolean }>({ view: 'health' }).then((h) => setHealthy(h.healthy !== false), () => undefined)
     try { setData(await pGet<ListAnswer>({ group, limit: 100 })); setErr(null) } catch (e) { setErr(adminError(e)) } finally { setLoading(false) }
   }, [group])

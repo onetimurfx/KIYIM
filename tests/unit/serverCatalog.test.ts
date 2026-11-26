@@ -4,7 +4,7 @@ import { variantQty } from '../../src/data/catalog'
 
 const good = () => ({
   categories: [{ id: 'hoodies', name: 'Xudilar' }],
-  brands: [{ id: 'b1', name: 'Brend', type: 'original' }],
+  brands: [{ id: 'b1', name: 'BREND', type: 'original' }],
   products: [
     {
       id: 'P1', name: 'Xudi', description: 'Tavsif', brandId: 'b1', categoryId: 'hoodies', price: 100000, oldPrice: 120000, type: 'original', isNew: true, popularity: 5,
@@ -101,6 +101,6 @@ describe('delivery settings', () => {
     expect(mapSettings({ deliveryConfigured: true, deliveryFee: null }).deliveryConfigured).toBe(false)
     expect(mapSettings({ deliveryConfigured: false, deliveryFee: 25000 })).toMatchObject({ deliveryConfigured: false, deliveryFee: null })
     expect(mapSettings({ deliveryConfigured: true, deliveryFee: -1 }).deliveryConfigured).toBe(false)
-    expect(mapSettings({ deliveryConfigured: true, deliveryFee: 0, deliveryFreeFrom: 500000, supportContact: '@aynimo' })).toEqual({ deliveryConfigured: true, deliveryFee: 0, deliveryFreeFrom: 500000, supportContact: '@aynimo' })
+    expect(mapSettings({ deliveryConfigured: true, deliveryFee: 0, deliveryFreeFrom: 500000, supportContact: '@brend_demo' })).toEqual({ deliveryConfigured: true, deliveryFee: 0, deliveryFreeFrom: 500000, supportContact: '@brend_demo' })
   })
 })
