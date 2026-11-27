@@ -54,6 +54,10 @@ store.update({ name: 'Do\'kon', primary: '#1F7A5C' })
 - Demo cheklovi: sozlama faqat shu qurilmada saqlanadi, boshqa mijozlarga ko'rinmaydi.
 
 ## Shisha tizimi (`src/index.css`)
-`.glass`, `.glass-bar`, `.glass-nav`, `.glass-sheet` — suzuvchi qatlamlar (blur bor); `.glass-card`, `.glass-pill`,
-`.glass-field` — ro'yxat elementlari (tezlik uchun blur yo'q). `prefers-reduced-transparency` va blur qo'llamaydigan
-brauzerlar uchun zich fon ishlatiladi.
+Blur faqat ostidan kontent o'tadigan qatlamlarda: `.glass-bar`, `.glass-nav`, `.glass-sheet`, `.glass-photo` (banner
+yozuvi). `.glass`, `.glass-card`, `.glass-pill`, `.glass-field`, `.glass-chip` shaffof, lekin tezlik uchun blursiz.
+Kuchsiz telefonda (`src/lib/performance.ts`: Telegram Android `LOW` sinfi yoki kam xotira) blur 8px gacha kamayadi.
+`prefers-reduced-transparency` va blur qo'llamaydigan brauzerlar uchun zich fon ishlatiladi.
+
+Juda och brend rangi tanlansa, rang saqlanadi, tugma va tanlangan holatlarga to'qroq hoshiya qo'shiladi va
+sozlamalarda ogohlantirish chiqadi.

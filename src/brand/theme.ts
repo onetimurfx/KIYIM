@@ -1,10 +1,7 @@
 /** Turns a brand into CSS variables (see src/index.css) plus the page title and icon. */
-import { mix, onColor, readableOn } from './color'
+import { isWeakFill, mix, onColor, readableOn, SURFACE } from './color'
 import { DEFAULT_BRAND } from './defaults'
 import type { BrandConfig } from './types'
-
-/** the darkest light surface text can sit on */
-const SURFACE = '#EEEAE4'
 
 export function themeVars(b: BrandConfig): Record<string, string> {
   const soft = mix(b.primary, '#FFFFFF', 0.84)
@@ -16,6 +13,8 @@ export function themeVars(b: BrandConfig): Record<string, string> {
     '--brand-on-primary': onColor(b.primary),
     '--brand-secondary': b.secondary,
     '--brand-on-secondary': onColor(b.secondary),
+    '--brand-primary-edge': readableOn(b.primary, SURFACE, 3),
+    '--brand-secondary-edge': readableOn(b.secondary, SURFACE, 3),
     '--brand-name': b.nameColor,
   }
 }
@@ -33,6 +32,8 @@ export function faviconFor(b: BrandConfig): string {
 export function applyBrand(b: BrandConfig, doc: Document = document) {
   const root = doc.documentElement
   for (const [k, v] of Object.entries(themeVars(b))) root.style.setProperty(k, v)
+  root.toggleAttribute('data-weak-primary', isWeakFill(b.primary))
+  root.toggleAttribute('data-weak-secondary', isWeakFill(b.secondary))
   root.dataset.glass = b.glass
   root.dataset.backdrop = b.backdrop
   doc.title = b.name

@@ -62,11 +62,11 @@ function Shell({ me }: { me: Me }) {
         <aside className="lg:sticky lg:top-0 lg:h-[var(--app-height)] lg:w-56 lg:shrink-0 lg:py-6">
           <header className="sticky top-0 z-30 glass-bar px-4 pb-2 lg:static lg:!border-0 lg:!bg-none lg:!shadow-none lg:!backdrop-blur-none lg:px-0" style={{ paddingTop: 'calc(var(--safe-top) + 10px)' }}>
             <div className="flex items-center justify-between gap-3">
-              <div className="flex items-center gap-2.5">
+              <div className="flex min-w-0 flex-1 items-center gap-2.5">
                 <Logo className="h-9" />
-                <span className="text-[12px] font-bold uppercase tracking-wider text-stone">admin</span>
+                <span className="shrink-0 text-[12px] font-bold uppercase tracking-wider text-stone">admin</span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex shrink-0 items-center gap-2">
                 <Badge tone={me.role === 'owner' ? 'new' : 'confirmed'}>{A.role[me.role]}</Badge>
                 <Link to="/" aria-label={A.back} className="glass grid size-10 place-items-center rounded-full lg:hidden"><ArrowLeft className="size-[18px]" /></Link>
               </div>

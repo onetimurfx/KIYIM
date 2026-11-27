@@ -2,7 +2,7 @@
 import { useEffect, useId, useState, type ReactNode } from 'react'
 import { ImagePlus, RotateCcw, ShoppingBag, Trash2, Zap } from 'lucide-react'
 import { BrandMark } from './BrandMark'
-import { normalizeHex } from './color'
+import { isWeakFill, isWeakName, normalizeHex } from './color'
 import { NAME_MAX, PRESETS } from './defaults'
 import { brandStore } from './instance'
 import { LOGO_ACCEPT, LogoError, readLogo, type LogoErrorCode } from './logo'
@@ -16,6 +16,8 @@ const LOGO_ERRORS: Record<LogoErrorCode, string> = {
   unsafe: "Bu SVG ichida skript yoki tashqi havola bor, xavfsizlik uchun qabul qilinmadi.",
   broken: "Faylni o'qib bo'lmadi. Boshqa fayl tanlang.",
 }
+
+const WEAK_FILL = "Bu rang juda och. Tugmalar ko'rinib turishi uchun atrofiga avtomatik to'q hoshiya qo'shildi."
 
 const GLASS: { id: GlassLevel; label: string }[] = [
   { id: 'clear', label: 'Shaffof' },
@@ -153,8 +155,11 @@ export function BrandSettings({ store = brandStore, disabled = false }: { store?
           })}
         </div>
         <ColorField id="primary" label="Asosiy rang" value={brand.primary} onChange={(v) => update({ primary: v })} />
+        {isWeakFill(brand.primary) && <ColorWarning id="primary">{WEAK_FILL}</ColorWarning>}
         <ColorField id="secondary" label="Qo'shimcha rang" value={brand.secondary} onChange={(v) => update({ secondary: v })} />
+        {isWeakFill(brand.secondary) && <ColorWarning id="secondary">{WEAK_FILL}</ColorWarning>}
         <ColorField id="nameColor" label="Nom (yozuv) rangi" value={brand.nameColor} onChange={(v) => update({ nameColor: v })} />
+        {isWeakName(brand.nameColor) && <ColorWarning id="nameColor">Bu rangda brend nomi fonda deyarli ko'rinmaydi. To'qroq rang tanlang.</ColorWarning>}
       </Panel>
 
       <Panel title="Interfeys uslubi">
@@ -185,6 +190,14 @@ function Panel({ title, children }: { title: string; children: ReactNode }) {
       <h2 className="text-[17px]">{title}</h2>
       {children}
     </section>
+  )
+}
+
+function ColorWarning({ id, children }: { id: string; children: ReactNode }) {
+  return (
+    <p role="status" data-testid={`brand-warn-${id}`} className="rounded-2xl bg-[#fbeedd] px-3.5 py-2 text-[12.5px] font-semibold leading-snug text-[#6b3f10]">
+      {children}
+    </p>
   )
 }
 

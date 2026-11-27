@@ -15,7 +15,7 @@ export function BrandMark({ brand, height = 36, maxWidth = 168 }: { brand: Brand
           alt={showName ? '' : brand.name}
           width={brand.logo.width}
           height={brand.logo.height}
-          className="block shrink-0 object-contain object-left"
+          className={`block object-contain object-left ${showName ? 'shrink-0' : 'min-w-0'}`}
           style={{ height, width: 'auto', maxWidth: showName ? Math.min(maxWidth, 96) : maxWidth }}
         />
       )}

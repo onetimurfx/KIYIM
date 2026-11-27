@@ -108,7 +108,7 @@ function Lightbox({ open, onClose, index, setIndex, count: COUNT, productId, ima
           role="dialog"
           aria-modal="true"
           aria-label={name}
-          className="fixed inset-0 z-[70] flex flex-col bg-navy/80 backdrop-blur-xl"
+          className="viewer-scrim fixed inset-0 z-[70] flex flex-col bg-navy/80 backdrop-blur-xl"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}

@@ -29,7 +29,7 @@ function Group({ title, children }: { title: string; children: ReactNode }) {
 }
 
 const chip = (on: boolean) =>
-  `rounded-full px-3.5 py-2 text-[13px] font-semibold transition active:scale-95 ${on ? 'bg-secondary text-on-secondary' : 'glass-card text-navy'}`
+  `max-w-full rounded-full px-3.5 py-2 text-[13px] font-semibold [overflow-wrap:anywhere] transition active:scale-95 ${on ? 'bg-secondary text-on-secondary' : 'glass-card text-navy'}`
 
 export function FilterSheet({ open, onClose, draft, setDraft, onApply, resultCount }: Props) {
   const fx = facets()

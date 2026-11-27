@@ -33,12 +33,12 @@ export function Section({ title, sub, to, children }: { title: string; sub?: str
   return (
     <section className="mt-7">
       <div className="mb-3 flex items-end justify-between px-4">
-        <div>
+        <div className="min-w-0">
           <h2 className="text-[21px]">{title}</h2>
           {sub && <p className="mt-0.5 text-[13px] text-navy-soft">{sub}</p>}
         </div>
         {to && (
-          <Link to={to} className="flex items-center gap-0.5 text-[13px] font-semibold text-primary-ink">
+          <Link to={to} className="flex shrink-0 items-center gap-0.5 text-[13px] font-semibold text-primary-ink">
             {t('common.all')}
             <ChevronRight className="size-4" />
           </Link>

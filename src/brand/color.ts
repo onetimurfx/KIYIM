@@ -36,6 +36,17 @@ export const INK = '#14202B'
 /** Text colour on a filled button of colour `bg`: white while it is clearly legible, otherwise dark ink. */
 export const onColor = (bg: string): string => (contrast('#FFFFFF', bg) >= 3.2 || contrast('#FFFFFF', bg) >= contrast(INK, bg) ? '#FFFFFF' : INK)
 
+/** the darkest light surface of the app: what text and controls have to stand out from */
+export const SURFACE = '#EEEAE4'
+
+/** below this a filled control (or a selection ring) is hard to tell apart from the background */
+export const MIN_FILL_CONTRAST = 2
+/** the large bold wordmark only warns when it practically disappears */
+export const MIN_NAME_CONTRAST = 1.35
+
+export const isWeakFill = (color: string): boolean => contrast(color, SURFACE) < MIN_FILL_CONTRAST
+export const isWeakName = (color: string): boolean => contrast(color, SURFACE) < MIN_NAME_CONTRAST
+
 /** Darkens `color` just enough to reach `min` contrast on a light surface. */
 export function readableOn(color: string, surface: string, min = 4.5): string {
   for (let step = 0; step <= 20; step++) {

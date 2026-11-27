@@ -40,7 +40,7 @@ export function BottomSheet({ open, onClose, title, children, footer, headerActi
             type="button"
             tabIndex={-1}
             aria-label={t('common.close')}
-            className="absolute inset-0 bg-navy/25 backdrop-blur-[3px]"
+            className="sheet-scrim absolute inset-0 bg-navy/25 backdrop-blur-[3px]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

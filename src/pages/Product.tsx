@@ -248,8 +248,8 @@ export function Product() {
         <dl className="mt-2 divide-y divide-navy/[0.07] rounded-[22px] glass-card px-4 text-[14px]">
           {rows.map(([k, v]) => (
             <div key={k} className="flex justify-between gap-4 py-3">
-              <dt className="text-stone">{k}</dt>
-              <dd className="text-right font-semibold">{v}</dd>
+              <dt className="shrink-0 text-stone">{k}</dt>
+              <dd className="min-w-0 text-right font-semibold [overflow-wrap:anywhere]">{v}</dd>
             </div>
           ))}
         </dl>

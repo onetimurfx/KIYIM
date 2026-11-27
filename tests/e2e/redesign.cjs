@@ -42,8 +42,11 @@ module.exports = async ({ browser, ctx, page, BASE, go, shot, check, wait, visib
   check(/blur/.test(await blur('header')), 'header is glass with background blur')
   check(/blur/.test(await blur('.glass-nav')), 'tab bar is glass with background blur')
   check((await blur('[data-testid="product-card"] > div')) === 'none', 'product cards are translucent without per-card blur')
+  for (const sel of ['.glass-chip', 'header .glass', '[data-testid="category-card"] .glass-chip']) check((await blur(sel)) === 'none', `no blur on small repeated element ${sel}`)
+  const blurredTotal = await page.evaluate(() => [...document.querySelectorAll('*')].filter((el) => /blur/.test(getComputedStyle(el).backdropFilter)).length)
+  check(blurredTotal <= 5, `blurred elements on the whole Home page: ${blurredTotal} (header, tab bar, 3 banner captions)`)
   const blurred = await page.evaluate(() => [...document.querySelectorAll('*')].filter((el) => { const r = el.getBoundingClientRect(); const f = getComputedStyle(el).backdropFilter; return f && f !== 'none' && r.bottom > 0 && r.top < innerHeight && r.right > 0 && r.left < innerWidth }).length)
-  check(blurred <= 12, `blurred surfaces visible on Home: ${blurred}`)
+  check(blurred <= 5, `blurred surfaces visible on Home: ${blurred}`)
   await page.getByRole('button', { name: /Bildirishnoma/i }).click(); await wait(600)
   check(/blur/.test(await blur('[role="dialog"]')), 'popup sheet is glass')
   await shot('11-popup')
@@ -155,4 +158,63 @@ module.exports = async ({ browser, ctx, page, BASE, go, shot, check, wait, visib
   check((await tp.locator('body').innerText()).includes('Telegram Sinov'), 'Telegram: user name shown in Profile')
   check(tgErrors.length === 0, `Telegram: no page errors ${tgErrors.join(' ')}`)
   await tg.close()
+
+  // ---- long shop names never widen a page, very light colours stay visible, weak phones get the cheap blur
+  const setBrand = (b) => page.evaluate((b) => localStorage.setItem('kiyim:brand:brend', JSON.stringify({ v: 1, ...b })), b)
+  await go('/mahsulot/s-hoodie-1')
+  await page.getByRole('radio').filter({ hasNot: page.locator('[disabled]') }).first().click()
+  await page.getByTestId('add-to-cart').click(); await wait(300)
+  const wideLogo = { src: 'data:image/svg+xml;base64,' + Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" width="900" height="100"><rect width="900" height="100"/></svg>').toString('base64'), width: 900, height: 100 }
+  const routes = ['/', '/katalog', '/mahsulot/s-hoodie-1', '/komplekt/o-classic', '/tezkor-buyurtma', '/savatcha', '/savatcha/buyurtma', '/profil', '/admin', '/admin/orders', '/admin/pickup', '/admin/products', '/admin/products/s-tee-1', '/admin/categories', '/admin/inventory', '/admin/customers', '/admin/brand', '/admin/settings']
+  for (const [label, brand] of [['24 wide letters', { name: 'W'.repeat(24) }], ['one long word', { name: 'SAMARQANDFASHIONHOUSE' }], ['wide logo only', { name: 'W'.repeat(24), logo: wideLogo, showName: false }], ['wide logo and name', { name: 'W'.repeat(24), logo: wideLogo, showName: true }]]) {
+    await setBrand(brand)
+    for (const width of [320, 390]) {
+      await page.setViewportSize({ width, height: 800 })
+      const bad = []
+      const overflow = () => page.evaluate(() => {
+        const out = []
+        if (document.documentElement.scrollWidth > document.documentElement.clientWidth) out.push('page')
+        // scroll boxes that are not meant to scroll sideways (rails are)
+        for (const el of document.querySelectorAll('body *')) {
+          const s = getComputedStyle(el)
+          if (s.overflowY === 'auto' && el.scrollWidth > el.clientWidth + 1 && !el.matches('.rail, .overflow-x-auto')) out.push('box ' + el.className.toString().slice(0, 30))
+        }
+        // header controls stay fully on screen
+        for (const el of document.querySelectorAll('header a, header button')) {
+          if (el.closest('nav')) continue
+          const r = el.getBoundingClientRect()
+          if (r.width && (r.left < -0.5 || r.right > innerWidth + 0.5 || r.width < 36)) out.push('header control ' + Math.round(r.left) + '..' + Math.round(r.right))
+        }
+        return out
+      })
+      for (const path of routes) { await go(path); await wait(120); const o = await overflow(); if (o.length) bad.push(`${path} ${o.join(',')}`) }
+      await go('/katalog'); await page.getByRole('button', { name: /Filtr/i }).first().click(); await wait(500)
+      const inSheet = await overflow(); if (inSheet.length) bad.push('filter sheet ' + inSheet.join(','))
+      check(bad.length === 0, `${label}: nothing scrolls sideways at ${width}px ${bad.slice(0, 4).join(' | ')}`)
+      if (width === 320 && label === '24 wide letters') { await go('/admin'); await shot('14-long-admin'); await go('/'); await shot('14-long-home') }
+    }
+  }
+  await page.setViewportSize({ width: 390, height: 844 })
+
+  await setBrand({ name: 'Oq Do\'kon', primary: '#FFFFFF', secondary: '#FFF59D', nameColor: '#FFFFFF' })
+  await go('/mahsulot/s-hoodie-1')
+  const edge = (sel) => page.locator(sel).first().evaluate((el) => { const s = getComputedStyle(el); return `${s.outlineStyle} ${s.outlineWidth} ${s.outlineColor}` })
+  check(/^solid/.test(await edge('[data-testid="quick-order"]')) && /^solid/.test(await edge('[data-testid="add-to-cart"]')), `very light colours: buttons get a darker edge (${await edge('[data-testid="quick-order"]')})`)
+  await shot('15-light-product')
+  await go('/admin/brand')
+  for (const id of ['primary', 'secondary', 'nameColor']) check(await page.getByTestId(`brand-warn-${id}`).isVisible(), `warning shown for a very light ${id}`)
+  await shot('15-light-settings')
+  await page.getByTestId('brand-reset').click(); await wait(300)
+  check((await page.locator('[data-testid^="brand-warn-"]').count()) === 0 && (await page.evaluate(() => !document.documentElement.hasAttribute('data-weak-primary') && !document.documentElement.hasAttribute('data-weak-secondary'))), 'default colours: no warning, no extra edge')
+
+  const weak = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, userAgent: 'Mozilla/5.0 (Linux; Android 12) Mobile Telegram-Android/11.3.3 (Xiaomi Redmi9A; Android 12; SDK 31; LOW)' })
+  await weak.route('**/telegram.org/**', (r) => r.abort())
+  await weak.route('https://images.unsplash.com/**', (r) => r.fulfill(standIn(r.request().url())))
+  const wp = await weak.newPage()
+  await wp.goto(BASE + '/', { waitUntil: 'networkidle' })
+  const lite = await wp.evaluate(() => ({ perf: document.documentElement.dataset.perf, header: getComputedStyle(document.querySelector('header')).backdropFilter, nav: getComputedStyle(document.querySelector('.glass-nav')).backdropFilter, caption: getComputedStyle(document.querySelector('.glass-photo')).backdropFilter, fill: getComputedStyle(document.querySelector('.glass-nav')).backgroundImage }))
+  check(lite.perf === 'lite' && lite.header === 'blur(8px)' && lite.nav === 'blur(8px)' && lite.caption === 'none' && /rgba\(255, 255, 255, 0\./.test(lite.fill), `weak Android phone: still translucent, cheaper blur ${JSON.stringify([lite.header, lite.caption])}`)
+  await wp.screenshot({ path: require('node:path').join(__dirname, 'shots', '16-lite-home.png') })
+  await weak.close()
+  check((await page.evaluate(() => document.documentElement.dataset.perf)) === undefined, 'normal phone keeps the full effect')
 }
