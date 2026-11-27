@@ -39,7 +39,7 @@ export function Customers() {
         {!error && loading && rows.length === 0 && <Loading />}
         {!error && !loading && rows.length === 0 && <Empty />}
         {rows.map((c) => (
-          <button key={c.id} type="button" data-testid="customer-row" onClick={() => setOpen(c.id)} className="glass flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left active:scale-[0.99]">
+          <button key={c.id} type="button" data-testid="customer-row" onClick={() => setOpen(c.id)} className="glass-card flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left active:scale-[0.99]">
             <div className="min-w-0 flex-1"><p className="truncate text-[14px] font-bold">{c.name || '—'}{c.username ? <span className="ml-1.5 font-normal text-stone">@{c.username}</span> : null}</p><p className="text-[12px] text-stone">{phoneFmt(c.phone)} · {c.cartOrders} Savat · {c.pickupOrders} pickup</p></div>
             <span className="shrink-0 text-[13px] font-bold">{uzs(c.cartSpent + c.pickupSpent)}</span>
           </button>
@@ -68,19 +68,19 @@ function CustomerSheet({ id, onClose }: { id: string | null; onClose: () => void
       {!err && !d && <Loading />}
       {c && d && (
         <div className="space-y-4 pb-2" data-testid="customer-sheet">
-          <section className="rounded-2xl bg-white p-3.5">
+          <section className="rounded-2xl glass-card p-3.5">
             <Row k="Telegram">{c.username ? `@${c.username}` : '—'}</Row><Row k="Telegram ID">{c.telegramId}</Row><Row k="Telefon">{phoneFmt(c.phone)}</Row>
             <Row k="Ro'yxatdan o'tgan">{when(c.createdAt)}</Row><Row k="Oxirgi faollik">{when(c.lastSeenAt)}</Row>
           </section>
           <section><h3 className="mb-1.5 text-[14px] font-bold text-navy-soft">Savat buyurtmalari</h3>
             {d.orders.length === 0 && <p className="text-[13px] text-stone">Yo'q</p>}
             <div className="space-y-1.5">{d.orders.map((o) => (
-              <Link key={o.id} to={`/admin/orders?open=${o.id}`} className="flex items-center gap-2 rounded-xl bg-white px-3 py-2.5 text-[13px]"><span className="min-w-0 flex-1 truncate font-semibold">{o.orderNumber}<span className="ml-2 font-normal text-stone">{when(o.createdAt)}</span></span><Badge tone={o.status}>{A.status[o.status as OrderStatus] ?? o.status}</Badge><span className="font-bold">{uzs(o.total)}</span></Link>
+              <Link key={o.id} to={`/admin/orders?open=${o.id}`} className="flex items-center gap-2 rounded-xl glass-card px-3 py-2.5 text-[13px]"><span className="min-w-0 flex-1 truncate font-semibold">{o.orderNumber}<span className="ml-2 font-normal text-stone">{when(o.createdAt)}</span></span><Badge tone={o.status}>{A.status[o.status as OrderStatus] ?? o.status}</Badge><span className="font-bold">{uzs(o.total)}</span></Link>
             ))}</div></section>
           <section><h3 className="mb-1.5 text-[14px] font-bold text-navy-soft">Tezkor (pickup) buyurtmalari</h3>
             {d.pickupOrders.length === 0 && <p className="text-[13px] text-stone">Yo'q</p>}
             <div className="space-y-1.5">{d.pickupOrders.map((o) => (
-              <Link key={o.id} to={`/admin/pickup?g=history&open=${o.id}`} className="flex items-center gap-2 rounded-xl bg-white px-3 py-2.5 text-[13px]"><span className="min-w-0 flex-1 truncate font-semibold">{o.orderNumber}<span className="ml-2 font-normal text-stone">{when(o.createdAt)}</span></span><Badge tone={o.status}>{A.pickupStatus[o.status as PickupStatus] ?? o.status}</Badge><span className="font-bold">{uzs(o.total)}</span></Link>
+              <Link key={o.id} to={`/admin/pickup?g=history&open=${o.id}`} className="flex items-center gap-2 rounded-xl glass-card px-3 py-2.5 text-[13px]"><span className="min-w-0 flex-1 truncate font-semibold">{o.orderNumber}<span className="ml-2 font-normal text-stone">{when(o.createdAt)}</span></span><Badge tone={o.status}>{A.pickupStatus[o.status as PickupStatus] ?? o.status}</Badge><span className="font-bold">{uzs(o.total)}</span></Link>
             ))}</div></section>
         </div>
       )}

@@ -6,7 +6,7 @@ import { t } from '../i18n'
 export function Totals({ subtotal, count, config = getDeliveryConfig() }: { subtotal: number; count?: number; config?: DeliveryConfig }) {
   const tot = computeTotals(subtotal, config)
   return (
-    <div data-testid="totals" className="rounded-[26px] bg-white p-4 shadow-[0_12px_28px_-18px_rgba(23,43,58,0.55)]">
+    <div data-testid="totals" className="rounded-[26px] glass-card p-4">
       <div className="flex items-baseline justify-between text-[14px] text-navy-soft">
         <span>
           {t('totals.goods')}

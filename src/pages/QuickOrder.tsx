@@ -233,14 +233,14 @@ export function QuickOrder() {
       <PageHeader title={t('quick.title')} />
       <form ref={formRef} onSubmit={submit} noValidate className="px-4" data-testid="quick-form">
         <p className="mb-3 text-[14px] text-navy-soft">{t('quick.subtitle')}</p>
-        <div data-testid="pickup-note" role="note" className="flex gap-3 rounded-2xl bg-white px-3.5 py-3 text-[13px] font-medium leading-snug text-navy-soft shadow-[0_6px_18px_-14px_rgba(23,43,58,0.5)]">
-          <Store className="mt-0.5 size-[18px] shrink-0 text-coral" />
+        <div data-testid="pickup-note" role="note" className="flex gap-3 rounded-2xl glass-card px-3.5 py-3 text-[13px] font-medium leading-snug text-navy-soft">
+          <Store className="mt-0.5 size-[18px] shrink-0 text-primary-ink" />
           <p>{t('pickup.note')}</p>
         </div>
         <div className="mt-3 space-y-3">
           <NoBackendNotice />
           {!online && (
-            <div data-testid="offline-banner" role="alert" className="flex gap-3 rounded-2xl bg-coral-soft px-3.5 py-3 text-[13px] font-semibold leading-snug text-coral-deep">
+            <div data-testid="offline-banner" role="alert" className="flex gap-3 rounded-2xl bg-danger-soft px-3.5 py-3 text-[13px] font-semibold leading-snug text-danger-deep">
               <CloudOff className="mt-0.5 size-[18px] shrink-0" />
               <p>{t('pickup.offlineBanner')}</p>
             </div>
@@ -252,7 +252,7 @@ export function QuickOrder() {
           1. {t('pickup.stepTitle1')}
         </h2>
         {products.length === 0 ? (
-          <p data-testid="quick-no-stock" className="rounded-2xl bg-white px-4 py-4 text-[14px] text-navy-soft">
+          <p data-testid="quick-no-stock" className="rounded-2xl glass-card px-4 py-4 text-[14px] text-navy-soft">
             {t('pickup.noStock')}
           </p>
         ) : (
@@ -267,10 +267,10 @@ export function QuickOrder() {
                   data-product-id={p.id}
                   aria-pressed={on}
                   onClick={() => pick(p.id)}
-                  className={`w-[112px] shrink-0 rounded-[20px] p-1.5 text-left transition active:scale-[0.97] ${on ? 'bg-white ring-2 ring-coral shadow-[0_12px_26px_-14px_rgba(217,75,89,0.7)]' : 'bg-white/70'}`}
+                  className={`w-[112px] shrink-0 rounded-[20px] p-1.5 text-left transition active:scale-[0.97] ${on ? 'glass-card ring-2 ring-primary' : 'glass-pill'}`}
                 >
                   <div className="aspect-[6/7] overflow-hidden rounded-2xl">
-                    <ProductImage categoryId={p.categoryId} color={p.colors[0].hex} className="size-full" />
+                    <ProductImage productId={p.id} images={p.images} width={100} height={117} className="size-full" />
                   </div>
                   <p className="mt-1.5 truncate px-1 text-[12.5px] font-semibold leading-tight">{p.name}</p>
                   <p className="px-1 pb-0.5 text-[12px] font-extrabold tabular-nums">{formatUZS(p.price)}</p>
@@ -281,14 +281,14 @@ export function QuickOrder() {
           </div>
         )}
         <p className="mt-1 text-[12px] text-stone">
-          {t('quick.inStockOnly')} · <Link to="/katalog" className="font-bold text-coral">{t('quick.toCatalog')}</Link>
+          {t('quick.inStockOnly')} · <Link to="/katalog" className="font-bold text-primary-ink">{t('quick.toCatalog')}</Link>
         </p>
 
         {product && col && (
           <div data-testid="quick-item" className="glass mt-4 rounded-[28px] p-4">
             <div className="flex gap-3.5">
               <Link to={`/mahsulot/${product.id}`} className="size-24 shrink-0 overflow-hidden rounded-[20px]">
-                <ProductImage categoryId={product.categoryId} color={col.hex} className="size-full" />
+                <ProductImage productId={product.id} images={product.images} width={96} height={96} className="size-full" />
               </Link>
               <div className="min-w-0 flex-1">
                 <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-stone">{getBrand(product.brandId)?.name}</p>
@@ -316,7 +316,7 @@ export function QuickOrder() {
                   aria-label={c.name}
                   aria-pressed={col.name === c.name}
                   onClick={() => chooseColor(c.name)}
-                  className={`size-10 rounded-full border border-navy/15 transition active:scale-90 ${col.name === c.name ? 'ring-2 ring-coral ring-offset-2 ring-offset-white' : ''}`}
+                  className={`size-10 rounded-full border border-navy/15 transition active:scale-90 ${col.name === c.name ? 'ring-2 ring-primary ring-offset-2 ring-offset-white' : ''}`}
                   style={{ background: c.hex }}
                 />
               ))}
@@ -324,7 +324,7 @@ export function QuickOrder() {
 
             <h3 className="mt-5 flex justify-between text-[13px] font-extrabold uppercase tracking-wider text-stone" style={{ fontFamily: 'var(--font-sans)' }}>
               <span>
-                {t('common.size')} <span className="text-coral">*</span>
+                {t('common.size')} <span className="text-danger-deep">*</span>
               </span>
               {size && <span className="normal-case tracking-normal text-navy">{size}</span>}
             </h3>
@@ -342,14 +342,14 @@ export function QuickOrder() {
                     setPickErr(null)
                     setQty(1)
                   }}
-                  className={`min-w-12 rounded-2xl px-4 py-2.5 text-sm font-bold transition active:scale-95 ${size === s ? 'bg-navy text-white' : 'bg-white shadow-[0_4px_14px_-10px_rgba(23,43,58,0.6)]'} ${pickErr ? 'ring-1 ring-coral' : ''}`}
+                  className={`min-w-12 rounded-2xl px-4 py-2.5 text-sm font-bold transition active:scale-95 ${size === s ? 'bg-secondary text-on-secondary' : 'glass-card'} ${pickErr ? 'ring-1 ring-danger' : ''}`}
                 >
                   {s}
                 </button>
               ))}
             </div>
             {pickErr && (
-              <p role="alert" data-testid="err-size" className="mt-2 text-[13px] font-semibold text-coral">
+              <p role="alert" data-testid="err-size" className="mt-2 text-[13px] font-semibold text-danger-deep">
                 {t('pickup.sizeRequired')}
               </p>
             )}
@@ -366,12 +366,12 @@ export function QuickOrder() {
               data-testid="quick-add"
               disabled={full}
               onClick={addToBasket}
-              className="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-navy px-5 py-3.5 text-[14.5px] font-bold text-white transition active:scale-[0.98] disabled:opacity-50"
+              className="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-secondary px-5 py-3.5 text-[14.5px] font-bold text-on-secondary transition active:scale-[0.98] disabled:opacity-50"
             >
               <Plus className="size-[18px]" />
               {t('pickup.add')}
             </button>
-            {full && <p className="mt-2 text-[12.5px] font-semibold text-coral">{t('pickup.maxLines', { n: MAX_LINES })}</p>}
+            {full && <p className="mt-2 text-[12.5px] font-semibold text-primary-ink">{t('pickup.maxLines', { n: MAX_LINES })}</p>}
           </div>
         )}
 
@@ -381,19 +381,18 @@ export function QuickOrder() {
           {quick.lines.length > 0 && <span className="normal-case tracking-normal">{t('pickup.linesCount', { n: quick.lines.length, max: MAX_LINES })}</span>}
         </h2>
         {quick.lines.length === 0 ? (
-          <p data-testid="quick-basket-empty" className="rounded-2xl bg-white px-4 py-4 text-[14px] text-navy-soft">
+          <p data-testid="quick-basket-empty" className="rounded-2xl glass-card px-4 py-4 text-[14px] text-navy-soft">
             {t('pickup.basketEmpty')}
           </p>
         ) : (
           <ul data-testid="quick-basket" className="space-y-2.5">
             {quick.lines.map((l) => {
               const p = getProduct(l.productId)!
-              const hex = p.colors.find((c) => c.name === l.color)?.hex ?? p.colors[0].hex
               const key = lineKey(l)
               return (
-                <li key={key} data-testid="quick-line" data-key={key} className="flex gap-3 rounded-[22px] bg-white p-3 shadow-[0_8px_22px_-16px_rgba(23,43,58,0.5)]">
+                <li key={key} data-testid="quick-line" data-key={key} className="flex gap-3 rounded-[22px] glass-card p-3">
                   <div className="size-[68px] shrink-0 overflow-hidden rounded-2xl">
-                    <ProductImage categoryId={p.categoryId} color={hex} className="size-full" />
+                    <ProductImage productId={p.id} images={p.images} width={68} height={68} className="size-full" />
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-[14.5px] font-semibold leading-tight">{p.name}</p>
@@ -422,7 +421,7 @@ export function QuickOrder() {
         <ContactFields value={draft.value} errors={errors} onChange={onChange} onBlurField={onBlurField} nameFromTelegram={Boolean(tgName) && draft.value.name === tgName} hideAddress />
         <p className="mt-2 text-[12px] text-navy-soft">{t('pickup.contactHint')}</p>
 
-        <div data-testid="pickup-total" className="mt-6 flex items-baseline justify-between gap-3 rounded-[26px] bg-white p-4 shadow-[0_12px_28px_-18px_rgba(23,43,58,0.55)]">
+        <div data-testid="pickup-total" className="mt-6 flex items-baseline justify-between gap-3 rounded-[26px] glass-card p-4">
           <span className="min-w-0 text-[12px] font-extrabold uppercase leading-tight tracking-wider text-stone">{t('pickup.total')}</span>
           <span data-testid="cart-total" className="whitespace-nowrap text-[21px] font-extrabold tabular-nums">
             {formatUZS(quick.subtotal)}
@@ -430,12 +429,12 @@ export function QuickOrder() {
         </div>
 
         {demo && (
-          <div data-testid="pickup-demo-blocked" role="alert" className="mt-4 rounded-2xl bg-[#fbeedd] px-4 py-3 text-[13.5px] font-semibold text-[#7a4a14]">
+          <div data-testid="pickup-demo-blocked" role="alert" className="mt-4 rounded-2xl bg-[#fbeedd]/75 px-4 py-3 text-[13.5px] font-semibold text-[#7a4a14]">
             {t('pickup.demoBlocked')}
           </div>
         )}
         {problem && (
-          <div role="alert" data-testid="submit-problem" data-kind={problem.unconfirmed ? 'unconfirmed' : 'failed'} className="mt-4 rounded-2xl bg-coral-soft px-4 py-3 text-[13.5px] font-semibold text-coral-deep">
+          <div role="alert" data-testid="submit-problem" data-kind={problem.unconfirmed ? 'unconfirmed' : 'failed'} className="mt-4 rounded-2xl bg-danger-soft px-4 py-3 text-[13.5px] font-semibold text-danger-deep">
             <p>{problem.title}</p>
             {problem.lines.length > 0 && (
               <ul className="mt-1 list-disc pl-5 font-medium">
@@ -445,14 +444,14 @@ export function QuickOrder() {
               </ul>
             )}
             {problem.unconfirmed && (
-              <Link to="/profil" data-testid="check-orders" className="mt-2 inline-block rounded-full bg-coral px-4 py-2 text-[13px] font-bold text-white">
+              <Link to="/profil" data-testid="check-orders" className="mt-2 inline-block rounded-full bg-primary px-4 py-2 text-[13px] font-bold text-on-primary">
                 {t('pickup.checkOrders')}
               </Link>
             )}
           </div>
         )}
         {Object.keys(errors).length > 0 && (
-          <p role="alert" className="mt-4 text-[13.5px] font-semibold text-coral">
+          <p role="alert" className="mt-4 text-[13.5px] font-semibold text-danger-deep">
             {t('form.invalid')}
           </p>
         )}
@@ -461,7 +460,7 @@ export function QuickOrder() {
           type="submit"
           data-testid="submit-order"
           disabled={submitting || demo}
-          className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-coral px-5 py-4 text-[15px] font-bold text-white shadow-[0_14px_28px_-10px_rgba(217,75,89,0.75)] transition active:scale-[0.98] disabled:opacity-60"
+          className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-primary px-5 py-4 text-[15px] font-bold text-on-primary transition active:scale-[0.98] disabled:opacity-60"
         >
           <Zap className="size-[18px]" fill="currentColor" />
           {submitting ? t('pickup.sending') : t('pickup.submit')}

@@ -23,6 +23,7 @@ export const uz = {
   'home.notifications.empty': "Hozircha bildirishnoma yo'q",
   'home.demo': "Bu namunaviy ko'rinish: mahsulotlar va narxlar haqiqiy emas.",
   'home.newCollection': 'Yangi kolleksiya',
+  'gallery.colorNote': 'Rasm namunaviy: asosiy rang ({color}) ko\'rsatilgan.',
   'home.original': 'BREND Original',
   'home.otherBrands': 'Boshqa brendlar',
   'home.popular': 'Mashhur mahsulotlar',

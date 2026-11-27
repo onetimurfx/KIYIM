@@ -75,7 +75,7 @@ export function Catalog() {
             type="button"
             onClick={() => commit({ ...state, cat: c.id })}
             aria-pressed={state.cat === c.id}
-            className={`shrink-0 rounded-full px-4 py-2 text-[13px] font-semibold ${state.cat === c.id ? 'bg-navy text-white' : 'glass'}`}
+            className={`shrink-0 rounded-full px-4 py-2 text-[13px] font-semibold ${state.cat === c.id ? 'bg-secondary text-on-secondary' : 'glass-pill'}`}
           >
             {c.name}
           </button>
@@ -89,17 +89,17 @@ export function Catalog() {
             setDraft(state)
             setSheet('filter')
           }}
-          className="glass relative flex items-center gap-2 rounded-full px-4 py-2.5 text-[13px] font-bold"
+          className="glass-pill relative flex items-center gap-2 rounded-full px-4 py-2.5 text-[13px] font-bold"
         >
           <SlidersHorizontal className="size-4" />
           {t('catalog.filter')}
           {groups > 0 && (
-            <span data-testid="filter-badge" className="grid min-w-5 place-items-center rounded-full bg-coral px-1 text-[11px] font-extrabold leading-5 text-white">
+            <span data-testid="filter-badge" className="grid min-w-5 place-items-center rounded-full bg-primary px-1 text-[11px] font-extrabold leading-5 text-on-primary">
               {groups}
             </span>
           )}
         </button>
-        <button type="button" onClick={() => setSheet('sort')} className="glass flex min-w-0 items-center gap-2 rounded-full px-4 py-2.5 text-[13px] font-bold">
+        <button type="button" onClick={() => setSheet('sort')} className="glass-pill flex min-w-0 items-center gap-2 rounded-full px-4 py-2.5 text-[13px] font-bold">
           <ArrowUpDown className="size-4 shrink-0" />
           <span className="truncate">{t(`sort.${state.sort}` as Key)}</span>
         </button>
@@ -108,7 +108,7 @@ export function Catalog() {
       {chips.length > 0 && (
         <div className="no-scrollbar mt-3 flex items-center gap-2 overflow-x-auto px-4" aria-label={t('filter.title')}>
           {chips.map((c) => (
-            <button key={c.key} type="button" onClick={c.clear} aria-label={`${c.label} ×`} className="flex shrink-0 items-center gap-1.5 rounded-full bg-coral-soft py-1.5 pl-3 pr-2 text-[12px] font-bold text-coral">
+            <button key={c.key} type="button" onClick={c.clear} aria-label={`${c.label} ×`} className="flex shrink-0 items-center gap-1.5 rounded-full bg-primary-soft/75 py-1.5 pl-3 pr-2 text-[12px] font-bold text-primary-ink">
               {c.label}
               <X className="size-3.5" />
             </button>
@@ -129,7 +129,7 @@ export function Catalog() {
           hint={t('catalog.emptyHint')}
           action={
             groups > 0 || state.q ? (
-              <button type="button" onClick={clearAll} className="rounded-full bg-coral px-6 py-3 text-sm font-bold text-white">
+              <button type="button" onClick={clearAll} className="rounded-full bg-primary px-6 py-3 text-sm font-bold text-on-primary">
                 {t('catalog.clearAll')}
               </button>
             ) : undefined
@@ -167,10 +167,10 @@ export function Catalog() {
                 commit({ ...state, sort: s })
                 setSheet(null)
               }}
-              className={`flex w-full items-center justify-between rounded-2xl px-4 py-3.5 text-left text-[15px] font-semibold ${state.sort === s ? 'bg-navy text-white' : 'bg-white shadow-[0_4px_14px_-10px_rgba(23,43,58,0.6)]'}`}
+              className={`flex w-full items-center justify-between rounded-2xl px-4 py-3.5 text-left text-[15px] font-semibold ${state.sort === s ? 'bg-secondary text-on-secondary' : 'glass-card'}`}
             >
               {t(`sort.${s}` as Key)}
-              {state.sort === s && <Check className="size-5 text-coral" strokeWidth={3} />}
+              {state.sort === s && <Check className="size-5 text-primary-ink" strokeWidth={3} />}
             </button>
           ))}
         </div>

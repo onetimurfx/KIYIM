@@ -46,7 +46,7 @@ export function Inventory() {
         {!error && loading && rows.length === 0 && <Loading />}
         {!error && !loading && rows.length === 0 && <Empty />}
         {rows.map((r) => (
-          <button key={r.variantId} type="button" data-testid="inv-row" onClick={() => setSel(r)} className="glass flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left active:scale-[0.99]">
+          <button key={r.variantId} type="button" data-testid="inv-row" onClick={() => setSel(r)} className="glass-card flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left active:scale-[0.99]">
             <span className="size-4 shrink-0 rounded-full ring-1 ring-navy/15" style={{ background: r.colorHex }} />
             <div className="min-w-0 flex-1"><p className="truncate text-[14px] font-bold">{r.productName}</p><p className="text-[12px] text-stone">{r.colorName}, {r.size}{r.sku ? ` · ${r.sku}` : ''}{r.active ? '' : ' · yashirin'}</p></div>
             <div className="shrink-0 text-right">
@@ -78,7 +78,7 @@ function AdjustSheet({ row, onClose, onDone }: { row: InventoryRow | null; onClo
       {row && (
         <div className="space-y-3 pb-2">
           {act.error && <Notice>{act.error}</Notice>}
-          <div className="rounded-2xl bg-white p-3.5"><Row k="Variant">{row.colorName}, {row.size}</Row><Row k="Omborda">{row.quantity}</Row><Row k="Band (pickup)">{row.reserved}</Row><Row k="Mavjud">{row.available}</Row></div>
+          <div className="rounded-2xl glass-card p-3.5"><Row k="Variant">{row.colorName}, {row.size}</Row><Row k="Omborda">{row.quantity}</Row><Row k="Band (pickup)">{row.reserved}</Row><Row k="Mavjud">{row.available}</Row></div>
           <Chips label="Rejim" value={mode} onChange={(m) => { setMode(m); setVal('') }} options={[{ id: 'set', label: 'Sanoq (aniq son)' }, { id: 'add', label: "Qo'shish / ayirish" }]} />
           <Field label={mode === 'set' ? "Omborda aniq nechta?" : "O'zgarish (masalan 5 yoki -2)"} hint={row.reserved > 0 ? `Band qilingan ${row.reserved} dan kam bo'lmasin.` : undefined}>
             <Input inputMode={mode === 'add' ? 'text' : 'numeric'} value={val} onChange={(e) => setVal(e.target.value.replace(mode === 'add' ? /[^\d-]/g : /\D/g, ''))} maxLength={7} data-testid="inv-value" />

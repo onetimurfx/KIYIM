@@ -11,6 +11,12 @@ const SHOTS = path.join(__dirname, 'shots')
 const fails = []
 const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${msg}`); if (!ok) fails.push(msg) }
 const wait = (ms) => new Promise((r) => setTimeout(r, ms))
+const standIn = (url) => {
+  const u = new URL(url); const w = +u.searchParams.get('w') || 400; const h = +u.searchParams.get('h') || 400
+  const hue = [...u.pathname].reduce((a, c) => (a * 31 + c.charCodeAt(0)) % 360, 0)
+  const body = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="hsl(${hue},22%,74%)"/><stop offset="1" stop-color="hsl(${(hue + 40) % 360},20%,48%)"/></linearGradient></defs><rect width="100" height="100" fill="url(#g)"/><text x="50" y="48" text-anchor="middle" font-family="sans-serif" font-size="9" font-weight="700" fill="#fff">TEST FOTO</text><text x="50" y="59" text-anchor="middle" font-family="sans-serif" font-size="5" fill="#fff">haqiqiy rasm emas</text></svg>`
+  return { status: 200, contentType: 'image/svg+xml', body }
+}
 async function waitFor(url) { for (let i = 0; i < 60; i++) { try { if ((await fetch(url)).ok) return } catch {} await wait(250) } throw new Error('server did not start') }
 
 ;(async () => {
@@ -25,6 +31,9 @@ async function waitFor(url) { for (let i = 0; i < 60; i++) { try { if ((await fe
     page.on('pageerror', (e) => errors.push(String(e)))
     page.on('console', (m) => m.type() === 'error' && !/telegram\.org|ERR_|Failed to load resource/.test(m.text()) && errors.push(m.text()))
     await page.route('**/telegram.org/**', (r) => r.abort())
+    // The test never depends on the real photo CDN: every request gets a clearly labelled stand-in of the asked size.
+    const photoRequests = []
+    await ctx.route('https://images.unsplash.com/**', (r) => { photoRequests.push(r.request().url()); return r.fulfill(standIn(r.request().url())) })
     const shot = (n) => page.screenshot({ path: path.join(SHOTS, n + '.png') })
     const go = async (p) => { await page.goto(BASE + p, { waitUntil: 'networkidle' }) }
     const visible = (txt) => page.getByText(txt, { exact: false }).first().waitFor({ state: 'visible', timeout: 4000 }).then(() => true, () => false)
@@ -130,6 +139,8 @@ async function waitFor(url) { for (let i = 0; i < 60; i++) { try { if ((await fe
       check(over <= 0, `admin ${p} renders without horizontal overflow`)
       await shot('10-' + p.split('/').pop())
     }
+
+    await require('./redesign.cjs')({ browser, ctx, page, BASE, go, shot, check, wait, visible, photoRequests, standIn })
 
     // ---- persistence + reset
     await go('/profil')

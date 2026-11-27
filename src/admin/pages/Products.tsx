@@ -1,13 +1,14 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ImageOff, Plus, Search } from 'lucide-react'
-import { imageUrl } from '../../lib/backend'
+import { Plus, Search } from 'lucide-react'
+import { ProductImage } from '../../components/ProductImage'
 import { aGet } from '../api'
 import { useDebounced } from '../hooks'
 import { A, adminError, uzs } from '../text'
 import type { Category, ProductRow } from '../types'
 import { Badge, Chips, Empty, ErrorBox, Input, Loading, Pager, Select, btnPrimary } from '../ui'
 import { PageTitle } from './common'
+import { brandText } from '../../brand/instance'
 
 interface ListAnswer { products: ProductRow[]; total: number }
 const PAGE = 30
@@ -50,21 +51,20 @@ export function Products() {
         {!error && loading && rows.length === 0 && <Loading />}
         {!error && !loading && rows.length === 0 && <Empty />}
         {rows.map((p) => {
-          const img = p.image ? imageUrl(p.image) : null
           return (
-            <Link key={p.id} to={`/admin/products/${p.id}`} data-testid="product-row" className="glass flex items-center gap-3 rounded-2xl p-3 active:scale-[0.99]">
+            <Link key={p.id} to={`/admin/products/${p.id}`} data-testid="product-row" className="glass-card flex items-center gap-3 rounded-2xl p-3 active:scale-[0.99]">
               <div className="grid size-16 shrink-0 place-items-center overflow-hidden rounded-xl bg-mist">
-                {img ? <img src={img} alt="" className="size-full object-cover" loading="lazy" /> : <ImageOff className="size-5 text-stone" />}
+                <ProductImage productId={p.id} images={p.image ? [p.image] : undefined} width={64} height={64} className="size-full" />
               </div>
               <div className="min-w-0 flex-1">
                 <p className="truncate text-[14px] font-bold">{p.name}</p>
-                <p className="truncate text-[12px] text-stone">{p.brandName} · {p.categoryName}</p>
+                <p className="truncate text-[12px] text-stone">{brandText(p.brandName)} · {p.categoryName}</p>
                 <p className="text-[13px] font-semibold">{uzs(p.price)}{p.oldPrice ? <span className="ml-1.5 text-[12px] font-normal text-stone line-through">{uzs(p.oldPrice)}</span> : null}</p>
               </div>
               <div className="flex shrink-0 flex-col items-end gap-1">
                 <Badge tone={p.active ? 'on' : 'off'}>{p.active ? 'Faol' : 'Yashirin'}</Badge>
                 {p.isSample && <Badge tone="low">sample</Badge>}
-                <span className={`text-[12px] font-semibold ${p.stock === 0 ? 'text-coral' : 'text-navy-soft'}`}>{p.stock === 0 ? 'Tugagan' : `${p.stock} dona`}</span>
+                <span className={`text-[12px] font-semibold ${p.stock === 0 ? 'text-danger-deep' : 'text-navy-soft'}`}>{p.stock === 0 ? 'Tugagan' : `${p.stock} dona`}</span>
               </div>
             </Link>
           )

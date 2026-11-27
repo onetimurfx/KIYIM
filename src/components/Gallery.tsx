@@ -1,26 +1,21 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronLeft, ChevronRight, Expand, X } from 'lucide-react'
-import { imageUrl } from '../lib/backend'
 import { t } from '../i18n'
-import { ProductImage } from './ProductImage'
-
-const SAMPLE_VIEWS = 4
+import { pictureCount, ProductImage } from './ProductImage'
 
 interface Props {
-  categoryId: string
-  color: string
+  productId: string
   name: string
-  /** storage paths of real photos; none = illustrations (sample catalog) */
+  /** storage paths of the shop's own photos; none = the catalogue photos of the product */
   images?: string[]
   /** shows the NAMUNA chip */
   sample?: boolean
 }
 
 /** Swipeable gallery (scroll-snap) + synced thumbnails + full-screen viewer with arrows, keys and swipe. */
-export function Gallery({ categoryId, color, name, images, sample = true }: Props) {
-  const COUNT = images && images.length > 0 ? images.length : SAMPLE_VIEWS
-  const srcOf = (i: number) => (images && images.length > 0 ? imageUrl(images[i]) : null)
+export function Gallery({ productId, name, images, sample = true }: Props) {
+  const COUNT = pictureCount(productId, images)
   const scroller = useRef<HTMLDivElement>(null)
   const [index, setIndex] = useState(0)
   const [zoom, setZoom] = useState(false)
@@ -37,7 +32,7 @@ export function Gallery({ categoryId, color, name, images, sample = true }: Prop
         <div
           ref={scroller}
           data-testid="gallery-scroller"
-          className="no-scrollbar flex snap-x snap-mandatory overflow-x-auto rounded-[30px] shadow-[0_18px_40px_-22px_rgba(23,43,58,0.6)]"
+          className="no-scrollbar flex snap-x snap-mandatory overflow-x-auto rounded-[30px] border border-white/70 shadow-[0_18px_40px_-22px_rgb(23_43_58/0.6)]"
           onScroll={(e) => setIndex(Math.round(e.currentTarget.scrollLeft / e.currentTarget.clientWidth))}
         >
           {Array.from({ length: COUNT }, (_, i) => (
@@ -46,9 +41,9 @@ export function Gallery({ categoryId, color, name, images, sample = true }: Prop
               type="button"
               onClick={() => setZoom(true)}
               aria-label={`${t('gallery.open')} (${i + 1}/${COUNT})`}
-              className="relative aspect-square w-full flex-none snap-center overflow-hidden bg-white"
+              className="relative aspect-square w-full flex-none snap-center overflow-hidden"
             >
-              <ProductImage categoryId={categoryId} color={color} src={srcOf(i)} view={i} className="size-full" label={`${name}, ${i + 1}/${COUNT}`} />
+              <ProductImage productId={productId} images={images} index={i} width={480} height={480} eager={i === 0} className="size-full" label={`${name}, ${i + 1}/${COUNT}`} />
             </button>
           ))}
         </div>
@@ -59,7 +54,7 @@ export function Gallery({ categoryId, color, name, images, sample = true }: Prop
         </span>
       </div>
 
-      <div className="mt-3 flex gap-2" role="tablist" aria-label={name}>
+      <div className={`mt-3 flex gap-2 overflow-x-auto p-1 ${COUNT > 1 ? '' : 'hidden'}`} role="tablist" aria-label={name}>
         {Array.from({ length: COUNT }, (_, i) => (
           <button
             key={i}
@@ -69,19 +64,19 @@ export function Gallery({ categoryId, color, name, images, sample = true }: Prop
             aria-current={index === i ? 'true' : undefined}
             aria-label={`${i + 1}/${COUNT}`}
             onClick={() => goTo(i)}
-            className={`size-[62px] overflow-hidden rounded-2xl transition ${index === i ? 'ring-2 ring-coral ring-offset-2 ring-offset-ivory' : 'opacity-70'}`}
+            className={`size-[62px] shrink-0 overflow-hidden rounded-2xl transition ${index === i ? 'ring-2 ring-primary ring-offset-2 ring-offset-ivory' : 'opacity-70'}`}
           >
-            <ProductImage categoryId={categoryId} color={color} src={srcOf(i)} view={i} className="size-full" />
+            <ProductImage productId={productId} images={images} index={i} width={62} height={62} className="size-full" />
           </button>
         ))}
       </div>
 
-      <Lightbox open={zoom} onClose={() => setZoom(false)} index={index} setIndex={(i) => goTo(i)} count={COUNT} src={srcOf(index)} categoryId={categoryId} color={color} name={name} />
+      <Lightbox open={zoom} onClose={() => setZoom(false)} index={index} setIndex={(i) => goTo(i)} count={COUNT} productId={productId} images={images} name={name} />
     </div>
   )
 }
 
-function Lightbox({ open, onClose, index, setIndex, count: COUNT, src, categoryId, color, name }: Props & { open: boolean; onClose: () => void; index: number; setIndex: (i: number) => void; count: number; src: string | null }) {
+function Lightbox({ open, onClose, index, setIndex, count: COUNT, productId, images, name }: Props & { open: boolean; onClose: () => void; index: number; setIndex: (i: number) => void; count: number }) {
   const touchX = useRef<number | null>(null)
   const prev = () => setIndex((index + COUNT - 1) % COUNT)
   const next = () => setIndex((index + 1) % COUNT)
@@ -113,7 +108,7 @@ function Lightbox({ open, onClose, index, setIndex, count: COUNT, src, categoryI
           role="dialog"
           aria-modal="true"
           aria-label={name}
-          className="fixed inset-0 z-[70] flex flex-col bg-navy/95 backdrop-blur-md"
+          className="viewer-scrim fixed inset-0 z-[70] flex flex-col bg-navy/80 backdrop-blur-xl"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -135,12 +130,12 @@ function Lightbox({ open, onClose, index, setIndex, count: COUNT, src, categoryI
           </div>
           <div className="relative flex min-h-0 flex-1 items-center justify-center px-3 pb-8">
             <div className="aspect-[6/7] max-h-full w-full max-w-[520px] overflow-hidden rounded-[28px]">
-              <ProductImage categoryId={categoryId} color={color} src={src} view={index} className="size-full" label={`${name}, ${index + 1}/${COUNT}`} />
+              <ProductImage productId={productId} images={images} index={index} width={480} height={560} eager className="size-full" label={`${name}, ${index + 1}/${COUNT}`} />
             </div>
-            <button type="button" onClick={prev} aria-label={t('gallery.prev')} className="absolute left-4 top-1/2 grid size-11 -translate-y-1/2 place-items-center rounded-full bg-white/85 text-navy shadow-lg">
+            <button type="button" onClick={prev} aria-label={t('gallery.prev')} className="absolute left-4 top-1/2 grid size-11 -translate-y-1/2 place-items-center rounded-full glass-chip text-navy shadow-lg">
               <ChevronLeft className="size-5" />
             </button>
-            <button type="button" onClick={next} aria-label={t('gallery.next')} className="absolute right-4 top-1/2 grid size-11 -translate-y-1/2 place-items-center rounded-full bg-white/85 text-navy shadow-lg">
+            <button type="button" onClick={next} aria-label={t('gallery.next')} className="absolute right-4 top-1/2 grid size-11 -translate-y-1/2 place-items-center rounded-full glass-chip text-navy shadow-lg">
               <ChevronRight className="size-5" />
             </button>
           </div>

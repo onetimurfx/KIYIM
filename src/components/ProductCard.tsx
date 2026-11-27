@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom'
 import type { Product } from '../data/types'
 import { getBrand } from '../data/catalog'
-import { imageUrl } from '../lib/backend'
 import { discountPercent, formatUZS } from '../lib/format'
 import { t } from '../i18n'
 import { ProductImage } from './ProductImage'
@@ -18,11 +17,11 @@ export function ProductCard({ product, grid = false }: { product: Product; grid?
       data-product-id={product.id}
       className={`group block ${grid ? 'w-full' : 'w-[160px]'} transition-transform active:scale-[0.98]`}
     >
-      <div className="relative aspect-[6/7] overflow-hidden rounded-[24px] bg-white shadow-[0_12px_28px_-16px_rgba(23,43,58,0.55)]">
-        <ProductImage categoryId={product.categoryId} color={product.colors[0].hex} src={product.images?.[0] ? imageUrl(product.images[0]) : null} className={`size-full transition-transform duration-500 group-active:scale-105 ${out ? 'opacity-45 grayscale-[0.4]' : ''}`} />
+      <div className="relative aspect-[6/7] overflow-hidden rounded-[24px] glass-card">
+        <ProductImage productId={product.id} images={product.images} width={grid ? 240 : 160} height={grid ? 280 : 187} className={`size-full transition-transform duration-500 group-active:scale-105 ${out ? 'opacity-45 grayscale-[0.4]' : ''}`} />
         <div className="absolute left-2.5 top-2.5 flex flex-col items-start gap-1">
-          {product.isNew && <span className="rounded-full bg-navy px-2.5 py-1 text-[10px] font-extrabold tracking-wider text-white">{t('common.new')}</span>}
-          {off > 0 && <span className="rounded-full bg-coral px-2.5 py-1 text-[10px] font-extrabold text-white">-{off}%</span>}
+          {product.isNew && <span className="rounded-full bg-secondary px-2.5 py-1 text-[10px] font-extrabold tracking-wider text-on-secondary">{t('common.new')}</span>}
+          {off > 0 && <span className="rounded-full bg-primary px-2.5 py-1 text-[10px] font-extrabold text-on-primary">-{off}%</span>}
         </div>
         {product.sample && <span className="glass-chip absolute bottom-2.5 left-2.5 rounded-full px-2 py-0.5 text-[9px] font-bold tracking-wider text-navy-soft">{t('common.sample')}</span>}
         {out && (
@@ -44,7 +43,7 @@ export function ProductCard({ product, grid = false }: { product: Product; grid?
         <span className="whitespace-nowrap text-[14.5px] font-extrabold text-navy">{formatUZS(product.price)}</span>
         {product.oldPrice && <span className="whitespace-nowrap text-[11px] text-stone line-through">{formatUZS(product.oldPrice)}</span>}
       </p>
-      {low && <p className="mt-0.5 text-[11.5px] font-bold text-coral">{t('product.lowStock', { n: product.stock })}</p>}
+      {low && <p className="mt-0.5 text-[11.5px] font-bold text-danger-deep">{t('product.lowStock', { n: product.stock })}</p>}
     </Link>
   )
 }

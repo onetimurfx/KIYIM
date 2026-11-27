@@ -8,6 +8,7 @@ import { A } from '../text'
 import type { Brand, Category } from '../types'
 import { Badge, Btn, ErrorBox, Field, Input, Loading, Notice, Select, card } from '../ui'
 import { PageTitle } from './common'
+import { brandText } from '../../brand/instance'
 
 type Editing = { kind: 'category'; item: Category | null } | { kind: 'brand'; item: Brand | null } | null
 
@@ -39,7 +40,7 @@ export function Categories() {
         <div className="space-y-2">
           {brands.data.brands.map((b) => (
             <button key={b.id} type="button" data-testid="brand-row" onClick={() => setEdit({ kind: 'brand', item: b })} className={`${card} flex w-full items-center gap-3 !p-3.5 text-left`}>
-              <div className="min-w-0 flex-1"><p className="truncate text-[14px] font-bold">{b.name}</p><p className="text-[12px] text-stone">{b.type === 'original' ? 'Original (Brend)' : 'Boshqa brend'} · {b.activeProductCount}/{b.productCount} mahsulot</p></div>
+              <div className="min-w-0 flex-1"><p className="truncate text-[14px] font-bold">{brandText(b.name)}</p><p className="text-[12px] text-stone">{b.type === 'original' ? 'Original (Brend)' : 'Boshqa brend'} · {b.activeProductCount}/{b.productCount} mahsulot</p></div>
               <Badge tone={b.active ? 'on' : 'off'}>{b.active ? 'Faol' : 'Yashirin'}</Badge><Pencil className="size-4 text-stone" />
             </button>
           ))}
@@ -78,7 +79,7 @@ function EditSheet({ edit, owner, onClose, onDone }: { edit: Editing; owner: boo
     <BottomSheet open onClose={onClose} title={`${isCat ? 'Kategoriya' : 'Brend'}${edit.item ? '' : ' (yangi)'}`}
       footer={<div className="flex gap-2">
         {isCat && edit.item && owner && !confirmDel && <Btn kind="danger" onClick={() => setConfirmDel(true)} aria-label="O'chirish" data-testid="cat-delete"><Trash2 className="size-4" /></Btn>}
-        {confirmDel ? <><Btn kind="ghost" onClick={() => setConfirmDel(false)} className="flex-1">{A.cancel}</Btn><Btn busy={act.busy} onClick={() => void del()} className="flex-1" data-testid="cat-delete-confirm">O'chirishni tasdiqlash</Btn></>
+        {confirmDel ? <><Btn kind="ghost" onClick={() => setConfirmDel(false)} className="flex-1">{A.cancel}</Btn><Btn kind="danger" busy={act.busy} onClick={() => void del()} className="flex-1" data-testid="cat-delete-confirm">O'chirishni tasdiqlash</Btn></>
           : <Btn busy={act.busy} disabled={name.trim().length === 0} onClick={() => void save()} className="flex-1" data-testid="cat-save">{A.save}</Btn>}
       </div>}>
       <div className="space-y-3 pb-2">
@@ -89,7 +90,7 @@ function EditSheet({ edit, owner, onClose, onDone }: { edit: Editing; owner: boo
         ) : (
           <Field label="Turi" hint="Mahsulot turi (Original / Boshqa) brendga qarab belgilanadi"><Select value={type} onChange={(e) => setType(e.target.value as 'original' | 'other')}><option value="original">Original (Brend)</option><option value="other">Boshqa brend</option></Select></Field>
         )}
-        <label className="flex min-h-11 items-center gap-3 text-[14px]"><input type="checkbox" checked={active} onChange={(e) => setActive(e.target.checked)} className="size-5 accent-[#d94b59]" />Faol (do'konda ko'rinadi)</label>
+        <label className="flex min-h-11 items-center gap-3 text-[14px]"><input type="checkbox" checked={active} onChange={(e) => setActive(e.target.checked)} className="size-5 accent-primary" />Faol (do'konda ko'rinadi)</label>
         {confirmDel && <Notice>Kategoriya butunlay o'chiriladi. Faqat bo'sh kategoriyani o'chirish mumkin.</Notice>}
       </div>
     </BottomSheet>

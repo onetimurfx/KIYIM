@@ -29,7 +29,7 @@ function Group({ title, children }: { title: string; children: ReactNode }) {
 }
 
 const chip = (on: boolean) =>
-  `rounded-full px-3.5 py-2 text-[13px] font-semibold transition active:scale-95 ${on ? 'bg-navy text-white' : 'bg-white text-navy shadow-[0_4px_14px_-10px_rgba(23,43,58,0.6)]'}`
+  `max-w-full rounded-full px-3.5 py-2 text-[13px] font-semibold [overflow-wrap:anywhere] transition active:scale-95 ${on ? 'bg-secondary text-on-secondary' : 'glass-card text-navy'}`
 
 export function FilterSheet({ open, onClose, draft, setDraft, onApply, resultCount }: Props) {
   const fx = facets()
@@ -45,7 +45,7 @@ export function FilterSheet({ open, onClose, draft, setDraft, onApply, resultCou
       onClose={onClose}
       title={t('filter.title')}
       headerAction={
-        <button type="button" onClick={() => setDraft({ ...EMPTY, sort: draft.sort, q: draft.q })} className="px-2 text-[13px] font-bold text-coral">
+        <button type="button" onClick={() => setDraft({ ...EMPTY, sort: draft.sort, q: draft.q })} className="px-2 text-[13px] font-bold text-primary-ink">
           {t('filter.clear')}
         </button>
       }
@@ -107,7 +107,7 @@ export function FilterSheet({ open, onClose, draft, setDraft, onApply, resultCou
                 aria-pressed={on}
                 title={c.name}
                 onClick={() => setDraft({ ...draft, colors: toggle(draft.colors, c.name) })}
-                className={`grid size-10 place-items-center rounded-full border border-navy/15 transition active:scale-90 ${on ? 'ring-2 ring-coral ring-offset-2 ring-offset-[#fbfaf7]' : ''}`}
+                className={`grid size-10 place-items-center rounded-full border border-navy/15 transition active:scale-90 ${on ? 'ring-2 ring-primary ring-offset-2 ring-offset-[#fbfaf7]' : ''}`}
                 style={{ background: c.hex }}
               >
                 {on && <Check className="size-4" strokeWidth={3} style={{ color: isLight(c.hex) ? '#172B3A' : '#fff' }} />}
@@ -133,7 +133,7 @@ export function FilterSheet({ open, onClose, draft, setDraft, onApply, resultCou
             value={lo}
             onChange={(e) => setPrice(Math.min(Number(e.target.value), hi), hi)}
             aria-label={`${t('filter.price')}: ${t('filter.from')}`}
-            className="mt-1 block h-8 w-full accent-[#D94B59]"
+            className="mt-1 block h-8 w-full accent-primary"
           />
         </label>
         <label className="mt-1 block text-[12px] font-semibold text-navy-soft">
@@ -146,7 +146,7 @@ export function FilterSheet({ open, onClose, draft, setDraft, onApply, resultCou
             value={hi}
             onChange={(e) => setPrice(lo, Math.max(Number(e.target.value), lo))}
             aria-label={`${t('filter.price')}: ${t('filter.to')}`}
-            className="mt-1 block h-8 w-full accent-[#D94B59]"
+            className="mt-1 block h-8 w-full accent-primary"
           />
         </label>
       </Group>
@@ -157,10 +157,10 @@ export function FilterSheet({ open, onClose, draft, setDraft, onApply, resultCou
           role="switch"
           aria-checked={draft.avail}
           onClick={() => setDraft({ ...draft, avail: !draft.avail })}
-          className="flex w-full items-center justify-between rounded-2xl bg-white px-4 py-3 text-left text-[14px] font-semibold shadow-[0_4px_14px_-10px_rgba(23,43,58,0.6)]"
+          className="flex w-full items-center justify-between rounded-2xl glass-card px-4 py-3 text-left text-[14px] font-semibold"
         >
           {t('filter.availOnly')}
-          <span className={`relative h-7 w-12 rounded-full transition ${draft.avail ? 'bg-coral' : 'bg-navy/20'}`}>
+          <span className={`relative h-7 w-12 rounded-full transition ${draft.avail ? 'bg-primary' : 'bg-navy/20'}`}>
             <span className={`absolute top-0.5 size-6 rounded-full bg-white shadow transition-all ${draft.avail ? 'left-[22px]' : 'left-0.5'}`} />
           </span>
         </button>

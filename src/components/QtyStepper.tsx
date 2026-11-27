@@ -13,7 +13,7 @@ interface Props {
 export function QtyStepper({ value, min = 1, max, onChange, compact = false, label }: Props) {
   const size = compact ? 'size-8' : 'size-10'
   return (
-    <div className="inline-flex items-center gap-1 rounded-full bg-white p-1 shadow-[0_6px_18px_-12px_rgba(23,43,58,0.6)]" role="group" aria-label={label ?? t('product.qty')}>
+    <div className="inline-flex items-center gap-1 rounded-full glass-card p-1" role="group" aria-label={label ?? t('product.qty')}>
       <button
         type="button"
         aria-label={t('qty.down')}
@@ -31,7 +31,7 @@ export function QtyStepper({ value, min = 1, max, onChange, compact = false, lab
         aria-label={t('qty.up')}
         disabled={value >= max}
         onClick={() => onChange(Math.min(max, value + 1))}
-        className={`${size} grid place-items-center rounded-full bg-navy text-white transition active:scale-90 disabled:opacity-35`}
+        className={`${size} grid place-items-center rounded-full bg-secondary text-on-secondary transition active:scale-90 disabled:opacity-35`}
       >
         <Plus className="size-4" />
       </button>

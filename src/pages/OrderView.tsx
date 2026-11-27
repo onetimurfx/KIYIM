@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { CheckCircle2, CloudOff, FileX2, TriangleAlert } from 'lucide-react'
 import { PageHeader, EmptyState, primaryBtn } from '../components/ui'
 import { ProductImage } from '../components/ProductImage'
+import { getProduct } from '../data/catalog'
 import { DraftBadge } from '../components/NoticeBanner'
 import { useOrders } from '../lib/ordersStore'
 import { formatUZS } from '../lib/format'
@@ -70,7 +71,7 @@ export function OrderView() {
       <PageHeader title={t('order.title')} right={isServer ? undefined : <DraftBadge />} />
       <div className="space-y-4 px-4">
         {isServer && (
-          <section data-testid="order-confirmed" role="status" className="rounded-[28px] bg-[#e8f1df] p-5 text-[#2f4a1f]">
+          <section data-testid="order-confirmed" role="status" className="rounded-[28px] bg-[#e8f1df]/75 p-5 text-[#2f4a1f]">
             <div className="flex items-center gap-3">
               <span className="grid size-11 shrink-0 place-items-center rounded-full bg-[#cfe3bd]">
                 <CheckCircle2 className="size-5" />
@@ -84,7 +85,7 @@ export function OrderView() {
           </section>
         )}
         {!isServer && (
-        <section data-testid="not-sent" role="alert" className="rounded-[28px] bg-[#fbeedd] p-5 text-[#6b3f10]">
+        <section data-testid="not-sent" role="alert" className="rounded-[28px] bg-[#fbeedd]/75 p-5 text-[#6b3f10]">
           <div className="flex items-center gap-3">
             <span className="grid size-11 shrink-0 place-items-center rounded-full bg-[#f3d9b6]">
               <CloudOff className="size-5" />
@@ -99,13 +100,13 @@ export function OrderView() {
         )}
 
         {!isServer && !storageOk && (
-          <p data-testid="storage-warn" role="alert" className="flex gap-2.5 rounded-2xl bg-coral-soft px-3.5 py-3 text-[13px] font-semibold text-coral-deep">
+          <p data-testid="storage-warn" role="alert" className="flex gap-2.5 rounded-2xl bg-danger-soft px-3.5 py-3 text-[13px] font-semibold text-danger-deep">
             <TriangleAlert className="mt-0.5 size-4 shrink-0" />
             {t('order.storageWarn')}
           </p>
         )}
 
-        <section className="rounded-[26px] bg-white p-4 shadow-[0_12px_28px_-18px_rgba(23,43,58,0.55)]">
+        <section className="rounded-[26px] glass-card p-4">
           <p className="text-[12px] font-bold uppercase tracking-wider text-stone">{isServer ? t('order.numberLabel') : t('order.refLabel')}</p>
           <p data-testid="order-ref" className="mt-0.5 text-[22px] font-extrabold tracking-wide tabular-nums">
             {order.ref}
@@ -127,11 +128,11 @@ export function OrderView() {
           <h2 className="mb-2 text-[13px] font-extrabold uppercase tracking-wider text-stone" style={{ fontFamily: 'var(--font-sans)' }}>
             {t('order.items')}
           </h2>
-          <ul className="divide-y divide-navy/[0.07] rounded-[24px] bg-white px-3 shadow-[0_12px_28px_-18px_rgba(23,43,58,0.55)]">
+          <ul className="divide-y divide-navy/[0.07] rounded-[24px] glass-card px-3">
             {order.items.map((it) => (
               <li key={`${it.productId}|${it.size}|${it.color}`} data-testid="order-item" className="flex items-center gap-3 py-3">
                 <div className="size-14 shrink-0 overflow-hidden rounded-2xl">
-                  <ProductImage categoryId={it.categoryId} color={it.colorHex} className="size-full" />
+                  <ProductImage productId={it.productId} images={getProduct(it.productId)?.images} width={56} height={56} className="size-full" />
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="line-clamp-2 text-[14px] font-semibold leading-tight">{it.name}</p>
@@ -145,7 +146,7 @@ export function OrderView() {
           </ul>
         </section>
 
-        <section data-testid="order-totals" className="rounded-[26px] bg-white p-4 shadow-[0_12px_28px_-18px_rgba(23,43,58,0.55)]">
+        <section data-testid="order-totals" className="rounded-[26px] glass-card p-4">
           <div className="flex justify-between text-[14px] text-navy-soft">
             <span>{t('totals.goods')}</span>
             <span className="font-semibold tabular-nums">{formatUZS(order.subtotal)}</span>
@@ -169,7 +170,7 @@ export function OrderView() {
           <h2 className="mb-2 text-[13px] font-extrabold uppercase tracking-wider text-stone" style={{ fontFamily: 'var(--font-sans)' }}>
             {t('order.customer')}
           </h2>
-          <dl className="divide-y divide-navy/[0.07] rounded-[24px] bg-white px-4 text-[14px] shadow-[0_12px_28px_-18px_rgba(23,43,58,0.55)]">
+          <dl className="divide-y divide-navy/[0.07] rounded-[24px] glass-card px-4 text-[14px]">
             {(
               [
                 [t('form.name'), order.contact.name],
@@ -190,7 +191,7 @@ export function OrderView() {
           <Link to="/katalog" className={primaryBtn}>
             {t('order.toCatalog')}
           </Link>
-          <Link to="/profil" className="text-[14px] font-bold text-coral">
+          <Link to="/profil" className="text-[14px] font-bold text-primary-ink">
             {t('order.toProfile')}
           </Link>
         </div>
@@ -201,7 +202,7 @@ export function OrderView() {
               {t('order.delete')}
             </button>
           ) : (
-            <div role="alertdialog" aria-label={t('order.delete')} className="rounded-2xl bg-white p-4 shadow-[0_12px_28px_-18px_rgba(23,43,58,0.55)]">
+            <div role="alertdialog" aria-label={t('order.delete')} className="rounded-2xl glass-card p-4">
               <p className="text-[14px]">{t('order.deleteAsk')}</p>
               <div className="mt-3 flex gap-3">
                 <button
@@ -211,7 +212,7 @@ export function OrderView() {
                     remove(order.id)
                     navigate('/profil', { replace: true })
                   }}
-                  className="rounded-full bg-coral px-4 py-2.5 text-[13.5px] font-bold text-white"
+                  className="rounded-full bg-danger px-4 py-2.5 text-[13.5px] font-bold text-white"
                 >
                   {t('order.deleteYes')}
                 </button>

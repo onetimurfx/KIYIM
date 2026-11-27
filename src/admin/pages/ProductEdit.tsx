@@ -8,6 +8,8 @@ import { useAction } from '../hooks'
 import { A, adminError, uzs } from '../text'
 import type { Brand, Category, ProductFull } from '../types'
 import { Badge, Btn, ErrorBox, Field, Input, Loading, Notice, Select, Textarea, card } from '../ui'
+import { brandText } from '../../brand/instance'
+import { photosOf } from '../../data/photos'
 
 interface VariantForm { id?: string; size: string; colorName: string; colorHex: string; sku: string; active: boolean; quantity: string; reserved?: number; current?: number }
 interface Form { name: string; brandId: string; categoryId: string; description: string; price: string; oldPrice: string; isNew: boolean; active: boolean; isSample: boolean; variants: VariantForm[] }
@@ -106,7 +108,7 @@ export function ProductEdit() {
         <section className={`${card} space-y-3`}>
           <Field label="Nomi"><Input value={form.name} onChange={(e) => set('name', e.target.value)} maxLength={200} data-testid="p-name" /></Field>
           <div className="grid grid-cols-2 gap-3">
-            <Field label="Brend"><Select value={form.brandId} onChange={(e) => set('brandId', e.target.value)} data-testid="p-brand"><option value="">Tanlang</option>{brands.filter((b) => b.active || b.id === form.brandId).map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}</Select></Field>
+            <Field label="Brend"><Select value={form.brandId} onChange={(e) => set('brandId', e.target.value)} data-testid="p-brand"><option value="">Tanlang</option>{brands.filter((b) => b.active || b.id === form.brandId).map((b) => <option key={b.id} value={b.id}>{brandText(b.name)}</option>)}</Select></Field>
             <Field label="Kategoriya"><Select value={form.categoryId} onChange={(e) => set('categoryId', e.target.value)} data-testid="p-category"><option value="">Tanlang</option>{cats.filter((c) => c.active || c.id === form.categoryId).map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</Select></Field>
           </div>
           <div className="grid grid-cols-2 gap-3">
@@ -114,35 +116,35 @@ export function ProductEdit() {
             <Field label="Eski narx" hint={form.oldPrice !== '' && !oldOk ? "Narxdan katta bo'lishi kerak" : 'Chegirma uchun'}><Input inputMode="numeric" value={form.oldPrice} onChange={(e) => set('oldPrice', e.target.value.replace(/\D/g, ''))} /></Field>
           </div>
           <Field label="Tavsif"><Textarea value={form.description} onChange={(e) => set('description', e.target.value)} maxLength={4000} /></Field>
-          <label className="flex min-h-11 items-center gap-3 text-[14px]"><input type="checkbox" checked={form.active} onChange={(e) => set('active', e.target.checked)} className="size-5 accent-[#d94b59]" data-testid="p-active" />Do'konda ko'rinadi (faol)</label>
-          <label className="flex min-h-11 items-center gap-3 text-[14px]"><input type="checkbox" checked={form.isNew} onChange={(e) => set('isNew', e.target.checked)} className="size-5 accent-[#d94b59]" />«Yangi» belgisi</label>
-          {me.role === 'owner' && !isNew && <label className="flex min-h-11 items-center gap-3 text-[14px]"><input type="checkbox" checked={form.isSample} onChange={(e) => set('isSample', e.target.checked)} className="size-5 accent-[#d94b59]" />Namuna (sample): sotib bo'lmaydi</label>}
+          <label className="flex min-h-11 items-center gap-3 text-[14px]"><input type="checkbox" checked={form.active} onChange={(e) => set('active', e.target.checked)} className="size-5 accent-primary" data-testid="p-active" />Do'konda ko'rinadi (faol)</label>
+          <label className="flex min-h-11 items-center gap-3 text-[14px]"><input type="checkbox" checked={form.isNew} onChange={(e) => set('isNew', e.target.checked)} className="size-5 accent-primary" />«Yangi» belgisi</label>
+          {me.role === 'owner' && !isNew && <label className="flex min-h-11 items-center gap-3 text-[14px]"><input type="checkbox" checked={form.isSample} onChange={(e) => set('isSample', e.target.checked)} className="size-5 accent-primary" />Namuna (sample): sotib bo'lmaydi</label>}
         </section>
 
         <section className={`${card} space-y-3`}>
           <h2 className="text-[17px]">O'lcham va ranglar</h2>
           {form.variants.length === 0 && <p className="text-[13px] text-stone">Kamida bitta variant qo'shing.</p>}
           {form.variants.map((v, i) => (
-            <div key={v.id ?? `n${i}`} className="space-y-2 rounded-2xl bg-white p-3" data-testid="variant-row">
+            <div key={v.id ?? `n${i}`} className="space-y-2 rounded-2xl glass-card p-3" data-testid="variant-row">
               <div className="grid grid-cols-2 gap-2">
                 <Input placeholder="O'lcham (M)" value={v.size} maxLength={20} onChange={(e) => setVar(i, { size: e.target.value })} aria-label="O'lcham" />
                 <Input placeholder="Rang (Qora)" value={v.colorName} maxLength={40} onChange={(e) => setVar(i, { colorName: e.target.value })} aria-label="Rang nomi" />
               </div>
               <div className="grid grid-cols-[auto_1fr_1fr] items-center gap-2">
-                <input type="color" value={/^#[0-9a-fA-F]{6}$/.test(v.colorHex) ? v.colorHex : '#000000'} onChange={(e) => setVar(i, { colorHex: e.target.value.toUpperCase() })} className="size-11 rounded-xl border border-navy/10 bg-white p-1" aria-label="Rang" />
+                <input type="color" value={/^#[0-9a-fA-F]{6}$/.test(v.colorHex) ? v.colorHex : '#000000'} onChange={(e) => setVar(i, { colorHex: e.target.value.toUpperCase() })} className="size-11 rounded-xl border border-navy/10 glass-card p-1" aria-label="Rang" />
                 <Input placeholder="#RRGGBB" value={v.colorHex} maxLength={7} onChange={(e) => setVar(i, { colorHex: e.target.value })} aria-label="Rang kodi" />
                 <Input placeholder="SKU" value={v.sku} maxLength={60} onChange={(e) => setVar(i, { sku: e.target.value })} aria-label="SKU" />
               </div>
               <div className="flex items-center justify-between gap-3">
                 {v.id ? (
-                  <span className="text-[12px] text-navy-soft">Omborda: <b>{v.current}</b>{v.reserved ? ` (band: ${v.reserved})` : ''} · <Link to="/admin/inventory" className="text-coral">o'zgartirish</Link></span>
+                  <span className="text-[12px] text-navy-soft">Omborda: <b>{v.current}</b>{v.reserved ? ` (band: ${v.reserved})` : ''} · <Link to="/admin/inventory" className="text-primary-ink">o'zgartirish</Link></span>
                 ) : (
                   <Input placeholder="Boshlang'ich soni" inputMode="numeric" value={v.quantity} maxLength={6} onChange={(e) => setVar(i, { quantity: e.target.value.replace(/\D/g, '') })} aria-label="Boshlang'ich miqdor" className="max-w-40" />
                 )}
                 {v.id ? (
-                  <label className="flex min-h-11 items-center gap-2 text-[13px]"><input type="checkbox" checked={v.active} onChange={(e) => setVar(i, { active: e.target.checked })} className="size-5 accent-[#d94b59]" />Sotuvda</label>
+                  <label className="flex min-h-11 items-center gap-2 text-[13px]"><input type="checkbox" checked={v.active} onChange={(e) => setVar(i, { active: e.target.checked })} className="size-5 accent-primary" />Sotuvda</label>
                 ) : (
-                  <button type="button" aria-label="Olib tashlash" onClick={() => set('variants', form.variants.filter((_, n) => n !== i))} className="grid size-11 place-items-center rounded-full text-coral"><Trash2 className="size-5" /></button>
+                  <button type="button" aria-label="Olib tashlash" onClick={() => set('variants', form.variants.filter((_, n) => n !== i))} className="grid size-11 place-items-center rounded-full text-danger-deep"><Trash2 className="size-5" /></button>
                 )}
               </div>
             </div>
@@ -165,17 +167,18 @@ export function ProductEdit() {
                   {n === 0 && <span className="absolute left-1.5 top-1.5 rounded-full bg-navy/80 px-2 py-0.5 text-[10px] font-bold text-white">asosiy</span>}
                   <div className="absolute inset-x-1.5 bottom-1.5 flex justify-between">
                     {n !== 0 ? <button type="button" aria-label="Asosiy qilish" onClick={() => void imgAct('image_cover', im.id)} className="grid size-9 place-items-center rounded-full bg-white/90"><Star className="size-4" /></button> : <span />}
-                    <button type="button" aria-label="O'chirish" onClick={() => void imgAct('image_delete', im.id)} className="grid size-9 place-items-center rounded-full bg-white/90 text-coral"><Trash2 className="size-4" /></button>
+                    <button type="button" aria-label="O'chirish" onClick={() => void imgAct('image_delete', im.id)} className="grid size-9 place-items-center rounded-full bg-white/90 text-danger-deep"><Trash2 className="size-4" /></button>
                   </div>
                 </div>
               ))}
             </div>
+            {product.images.length === 0 && photosOf(product.id).length > 0 && <p className="text-[12px] text-navy-soft">Hozircha do'konda namunaviy surat ko'rsatilmoqda. O'z rasmingizni yuklasangiz, u almashadi.</p>}
             <p className="text-[12px] text-stone">JPG, PNG yoki WebP, 5 MB gacha. Birinchi rasm — mahsulot kartasidagi asosiy rasm.</p>
           </section>
         )}
       </div>
 
-      <div className="sticky bottom-0 mt-4 space-y-2 bg-gradient-to-t from-ivory via-ivory/95 to-transparent pb-3 pt-4" style={{ paddingBottom: 'calc(var(--safe-bottom) + 12px)' }}>
+      <div className="sticky bottom-0 mt-4 space-y-2 bg-gradient-to-t from-ivory/95 via-ivory/70 to-transparent pb-3 pt-4" style={{ paddingBottom: 'calc(var(--safe-bottom) + 12px)' }}>
         {act.error && <Notice>{act.error}</Notice>}
         {ok && <Notice kind="ok">{A.saved}{product ? ` · ${uzs(product.price)}` : ''}</Notice>}
         <Btn busy={act.busy} disabled={!valid} onClick={() => void save()} className="w-full" data-testid="p-save">{act.busy ? A.saving : isNew ? "Mahsulotni yaratish" : A.save}</Btn>

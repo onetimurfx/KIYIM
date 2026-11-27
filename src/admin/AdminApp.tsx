@@ -1,6 +1,6 @@
 import { createContext, useContext, type ReactNode } from 'react'
 import { Link, NavLink, Navigate, Route, Routes } from 'react-router-dom'
-import { Boxes, ClipboardList, LayoutDashboard, Package, Settings, ShieldAlert, Store, Tags, Users, WifiOff, Smartphone, ArrowLeft } from 'lucide-react'
+import { Boxes, ClipboardList, LayoutDashboard, Package, Settings, ShieldAlert, Store, Tags, Users, WifiOff, Smartphone, ArrowLeft, Palette } from 'lucide-react'
 import { Logo } from '../components/Logo'
 import { useBackend } from '../lib/backendContext'
 import { aGet } from './api'
@@ -17,6 +17,7 @@ import { Categories } from './pages/Categories'
 import { Inventory } from './pages/Inventory'
 import { Customers } from './pages/Customers'
 import { SettingsPage } from './pages/Settings'
+import { BrandPage } from './pages/Brand'
 
 const AdminCtx = createContext<Me | null>(null)
 /** The signed-in administrator, as the SERVER reported it. Only used to hide controls: the server re-checks every call. */
@@ -29,12 +30,12 @@ export const useMe = () => {
 function Screen({ icon, title, hint, children }: { icon: ReactNode; title: string; hint: string; children?: ReactNode }) {
   return (
     <div className="mx-auto flex min-h-[var(--app-height)] max-w-[520px] flex-col items-center justify-center px-6 text-center">
-      <div className="mb-4 grid size-16 place-items-center rounded-full bg-coral-soft text-coral">{icon}</div>
+      <div className="mb-4 grid size-16 place-items-center rounded-full bg-primary-soft text-primary-ink">{icon}</div>
       <h1 className="text-2xl">{title}</h1>
       <p className="mt-2 max-w-[32ch] text-sm text-navy-soft">{hint}</p>
       <div className="mt-6 flex flex-col gap-3">
         {children}
-        <Link to="/" className="text-[13px] font-semibold text-coral">{A.back}</Link>
+        <Link to="/" className="text-[13px] font-semibold text-primary-ink">{A.back}</Link>
       </div>
     </div>
   )
@@ -48,23 +49,24 @@ const NAV = [
   { to: '/admin/categories', label: A.nav.categories, icon: Tags },
   { to: '/admin/inventory', label: A.nav.inventory, icon: Boxes },
   { to: '/admin/customers', label: A.nav.customers, icon: Users },
+  { to: '/admin/brand', label: A.nav.brand, icon: Palette },
   { to: '/admin/settings', label: A.nav.settings, icon: Settings },
 ]
 
 function Shell({ me }: { me: Me }) {
   const link = ({ isActive }: { isActive: boolean }) =>
-    `flex min-h-11 shrink-0 items-center gap-2 rounded-full px-4 text-[13px] font-semibold transition-colors lg:rounded-2xl lg:px-3.5 ${isActive ? 'bg-navy text-white' : 'glass-chip text-navy lg:bg-transparent'}`
+    `flex min-h-11 shrink-0 items-center gap-2 rounded-full px-4 text-[13px] font-semibold transition-colors lg:rounded-2xl lg:px-3.5 ${isActive ? 'bg-secondary text-on-secondary' : 'glass-pill text-navy lg:!border-transparent lg:!bg-none lg:!shadow-none'}`
   return (
     <AdminCtx.Provider value={me}>
       <div className="mx-auto min-h-[var(--app-height)] max-w-[1180px] lg:flex lg:gap-6 lg:px-6">
         <aside className="lg:sticky lg:top-0 lg:h-[var(--app-height)] lg:w-56 lg:shrink-0 lg:py-6">
-          <header className="sticky top-0 z-30 bg-ivory/85 px-4 pb-2 backdrop-blur-xl lg:static lg:bg-transparent lg:px-0 lg:backdrop-blur-none" style={{ paddingTop: 'calc(var(--safe-top) + 10px)' }}>
+          <header className="sticky top-0 z-30 glass-bar px-4 pb-2 lg:static lg:!border-0 lg:!bg-none lg:!shadow-none lg:!backdrop-blur-none lg:px-0" style={{ paddingTop: 'calc(var(--safe-top) + 10px)' }}>
             <div className="flex items-center justify-between gap-3">
-              <div className="flex items-center gap-2.5">
+              <div className="flex min-w-0 flex-1 items-center gap-2.5">
                 <Logo className="h-9" />
-                <span className="text-[12px] font-bold uppercase tracking-wider text-stone">admin</span>
+                <span className="shrink-0 text-[12px] font-bold uppercase tracking-wider text-stone">admin</span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex shrink-0 items-center gap-2">
                 <Badge tone={me.role === 'owner' ? 'new' : 'confirmed'}>{A.role[me.role]}</Badge>
                 <Link to="/" aria-label={A.back} className="glass grid size-10 place-items-center rounded-full lg:hidden"><ArrowLeft className="size-[18px]" /></Link>
               </div>
@@ -77,7 +79,7 @@ function Shell({ me }: { me: Me }) {
                 </NavLink>
               ))}
             </nav>
-            <Link to="/" className="mt-4 hidden items-center gap-2 px-3.5 text-[13px] font-semibold text-coral lg:flex"><ArrowLeft className="size-4" />{A.back}</Link>
+            <Link to="/" className="mt-4 hidden items-center gap-2 px-3.5 text-[13px] font-semibold text-primary-ink lg:flex"><ArrowLeft className="size-4" />{A.back}</Link>
           </header>
         </aside>
         <main className="min-w-0 flex-1 px-4 pb-16 pt-3 lg:px-0 lg:pt-6" style={{ paddingBottom: 'calc(var(--safe-bottom) + 64px)' }}>
@@ -90,6 +92,7 @@ function Shell({ me }: { me: Me }) {
             <Route path="/admin/categories" element={<Categories />} />
             <Route path="/admin/inventory" element={<Inventory />} />
             <Route path="/admin/customers" element={<Customers />} />
+            <Route path="/admin/brand" element={<BrandPage />} />
             <Route path="/admin/settings" element={<SettingsPage />} />
             <Route path="*" element={<Navigate to="/admin" replace />} />
           </Routes>

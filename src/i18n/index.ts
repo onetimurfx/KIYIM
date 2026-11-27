@@ -1,3 +1,4 @@
+import { brandText } from '../brand/instance'
 import { uz, type Key } from './uz'
 
 export type Locale = 'uz' | 'ru' | 'en'
@@ -10,6 +11,7 @@ export const setLocale = (l: Locale) => {
 
 /** Falls back to Uzbek when a key is not translated yet. `{n}`-style placeholders are filled from `vars`. */
 export const t = (key: Key, vars?: Record<string, string | number>): string => {
-  const raw: string = dictionaries[locale][key] ?? uz[key]
+  // the dictionary is written with the placeholder brand; the shop's own name replaces it
+  const raw: string = brandText(dictionaries[locale][key] ?? uz[key])
   return vars ? raw.replace(/\{(\w+)\}/g, (_, k: string) => String(vars[k] ?? '')) : raw
 }
